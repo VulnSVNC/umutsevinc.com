@@ -58,7 +58,7 @@ const nav = [
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-surface focus:border focus:border-line focus:px-3 focus:py-2 focus:rounded">İçeriğe geç</a>
 
     <header class="border-b border-line">
-      <div class="mx-auto max-w-4xl px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div class="mx-auto max-w-6xl px-5 py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <a href="/" class="flex items-baseline gap-2 leading-none">
           <span class="font-serif text-lg text-ink">VulnSVNC</span>
           <span class="font-sans text-[11px] tracking-wide text-muted">Advisories</span>
@@ -73,12 +73,12 @@ const nav = [
       </div>
     </header>
 
-    <main id="main" class="mx-auto max-w-4xl px-5 py-12">
+    <main id="main" class="mx-auto max-w-6xl px-5 py-12">
       <slot />
     </main>
 
     <footer class="border-t border-line">
-      <div class="mx-auto max-w-4xl px-5 py-7 flex flex-wrap gap-x-8 gap-y-2 justify-between text-xs text-faint">
+      <div class="mx-auto max-w-6xl px-5 py-7 flex flex-wrap gap-x-8 gap-y-2 justify-between text-xs text-faint">
         <p>© {new Date().getFullYear()} Umut Sevinç (VulnSVNC), Türkiye</p>
         <p>Kayıtlar CVEProject/cvelistV5 ve NVD 2.0 üzerinden doğrulanır</p>
       </div>

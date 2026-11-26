@@ -92,7 +92,7 @@ const facts: [string, string][] = [
         <dt class="text-xs text-faint">CVSS</dt>
         <dd class="mt-1 text-sm font-mono">
           {score != null ? (
-            <span class={sev.text}>{score.toFixed(1)} · {sev.label}</span>
+            <span class={sev.text}>{score.toFixed(1)} · {sev.trLabel}</span>
           ) : <span class="text-faint">—</span>}
         </dd>
       </div>

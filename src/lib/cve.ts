@@ -5,12 +5,12 @@ export function topScore(c: any): number | null {
   return s > 0 ? s : null;
 }
 
-export function severity(score: number | null): { label: string; dot: string; text: string } {
-  if (score == null) return { label: 'N/A', dot: 'bg-faint', text: 'text-faint' };
-  if (score >= 9) return { label: 'Critical', dot: 'bg-critical', text: 'text-critical' };
-  if (score >= 7) return { label: 'High', dot: 'bg-high', text: 'text-high' };
-  if (score >= 4) return { label: 'Medium', dot: 'bg-medium', text: 'text-medium' };
-  return { label: 'Low', dot: 'bg-low', text: 'text-low' };
+export function severity(score: number | null): { label: string; trLabel: string; dot: string; text: string; border: string; emphasize: boolean } {
+  if (score == null) return { label: 'N/A', trLabel: 'Belirsiz', dot: 'bg-faint', text: 'text-faint', border: 'border-l-line', emphasize: false };
+  if (score >= 9) return { label: 'Critical', trLabel: 'Kritik', dot: 'bg-critical', text: 'text-critical', border: 'border-l-critical', emphasize: true };
+  if (score >= 7) return { label: 'High', trLabel: 'Yüksek', dot: 'bg-high', text: 'text-high', border: 'border-l-high', emphasize: true };
+  if (score >= 4) return { label: 'Medium', trLabel: 'Orta', dot: 'bg-medium', text: 'text-medium', border: 'border-l-line', emphasize: false };
+  return { label: 'Low', trLabel: 'Düşük', dot: 'bg-low', text: 'text-low', border: 'border-l-line', emphasize: false };
 }
 
 export const STATUS: Record<string, { tr: string; en: string; text: string }> = {

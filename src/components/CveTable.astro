@@ -13,20 +13,35 @@ const langs = [...new Set(cves.flatMap((c) => c.language))].sort();
   </select>
 </div>
 
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="cve-grid">
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4" id="cve-grid">
   {cves.map((c) => {
     const s = topScore(c);
     const sev = severity(s);
     return (
       <a href={`/cve/${slugOf(c.id)}`} data-row data-lang={c.language.join(' ').toLowerCase()}
           data-text={`${c.id} ${c.product} ${c.vulnType} ${c.cwe.join(' ')} ${c.language.join(' ')}`.toLowerCase()}
-          class="group block border border-line bg-surface p-5 transition-all duration-200 hover:border-brass-dim hover:-translate-y-0.5 hover:shadow-[0_10px_24px_-14px_rgba(0,0,0,0.5)]">
+          class:list={[
+            'group relative block border border-l-[3px] bg-surface p-5 transition-all duration-200 hover:border-brass-dim hover:-translate-y-0.5',
+            sev.border,
+            sev.emphasize
+              ? 'shadow-[0_14px_30px_-18px_var(--sev-glow)] hover:shadow-[0_18px_36px_-16px_var(--sev-glow)]'
+              : 'hover:shadow-[0_10px_24px_-14px_rgba(0,0,0,0.5)]',
+          ]}
+          style={sev.emphasize ? `--sev-glow: color-mix(in srgb, var(--color-${sev.label.toLowerCase()}) 45%, transparent)` : undefined}>
         <div class="flex items-center justify-between gap-3">
           <span class="font-mono text-xs text-brass">{c.id}</span>
           {s != null ? (
             <span class="inline-flex items-center gap-1.5 font-mono text-xs shrink-0">
-              <span class={`inline-block w-1.5 h-1.5 rounded-full ${sev.dot}`}></span>
+              {sev.emphasize ? (
+                <span class="relative flex h-1.5 w-1.5">
+                  <span class={`pulse-ring absolute inline-flex h-full w-full rounded-full ${sev.dot}`}></span>
+                  <span class={`relative inline-flex h-1.5 w-1.5 rounded-full ${sev.dot}`}></span>
+                </span>
+              ) : (
+                <span class={`inline-block w-1.5 h-1.5 rounded-full ${sev.dot}`}></span>
+              )}
               <span class={sev.text}>{s.toFixed(1)}</span>
+              <span class={`${sev.text} opacity-80`}>· {sev.trLabel}</span>
             </span>
           ) : <span class="text-faint text-xs shrink-0">—</span>}
         </div>
