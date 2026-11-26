@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #0e0c0a;
-  --color-surface: #161310;
-  --color-surface-2: #1f1b15;
-  --color-line: #342d1b;
-  --color-line-soft: #241f14;
+  --color-bg: #0a0806;
+  --color-surface: #121009;
+  --color-surface-2: #1a160f;
+  --color-line: #2e2718;
+  --color-line-soft: #201b11;
   --color-ink: #ece5d3;
   --color-muted: #a89f8a;
   --color-faint: #726a58;
@@ -38,9 +38,13 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background: var(--color-bg);
+  background-color: var(--color-bg);
   background-image:
-    radial-gradient(ellipse 1200px 500px at 50% -10%, color-mix(in srgb, var(--color-brass) 7%, transparent), transparent);
+    radial-gradient(ellipse 1200px 500px at 50% -10%, color-mix(in srgb, var(--color-brass) 7%, transparent), transparent),
+    linear-gradient(color-mix(in srgb, var(--color-line) 45%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in srgb, var(--color-line) 45%, transparent) 1px, transparent 1px);
+  background-size: auto, 42px 42px, 42px 42px;
+  background-attachment: fixed;
 }
 
 ::selection { background: color-mix(in srgb, var(--color-brass) 28%, transparent); }
