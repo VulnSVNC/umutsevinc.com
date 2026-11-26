@@ -1,0 +1,33 @@
+---
+import { SITE } from '../data/site';
+import { slugOf } from '../lib/cve';
+
+interface Props { cves: any[] }
+const { cves } = Astro.props;
+const base = String(Astro.site).replace(/\/$/, '');
+
+const person = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  '@id': `${base}/#person`,
+  name: SITE.fullName,
+  alternateName: SITE.alternateNames,
+  url: base + '/',
+  nationality: 'Turkey',
+  address: { '@type': 'PostalAddress', addressCountry: 'TR' },
+  jobTitle: SITE.jobTitle,
+  description: SITE.description,
+  knowsAbout: SITE.expertise,
+  sameAs: [SITE.github, SITE.linkedin],
+  subjectOf: cves.map((c) => ({
+    '@type': 'TechArticle',
+    headline: `${c.id}: ${c.title}`,
+    url: `${base}/cve/${slugOf(c.id)}`,
+    author: { '@id': `${base}/#person` },
+    about: c.product,
+    identifier: c.id,
+  })),
+};
+const json = JSON.stringify(person).replace(/</g, '\\u003c');
+---
+<script type="application/ld+json" set:html={json} />

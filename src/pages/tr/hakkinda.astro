@@ -1,0 +1,43 @@
+---
+import Base from '../../layouts/Base.astro';
+import { SITE } from '../../data/site';
+---
+<Base
+  title="Hakkında: Umut Sevinç (VulnSVNC) | Türkiye Merkezli Zafiyet Araştırmacısı"
+  description="Umut Sevinç (VulnSVNC) kimdir? Türkiye merkezli zafiyet araştırmacısı; sorumlu ifşa metodolojisi ve ofansif güvenlik araçları üzerine meta-güvenlik araştırmaları."
+  path="/tr/hakkinda"
+  alternates={[{ hreflang: 'tr', path: '/tr/hakkinda' }, { hreflang: 'en', path: '/en/about' }]}
+>
+  <h1 class="text-3xl font-bold text-zinc-50">Umut Sevinç (VulnSVNC) <span class="block text-emerald-400 text-xl mt-1">Türkiye Merkezli Zafiyet Araştırmacısı</span></h1>
+
+  <section class="mt-6 space-y-3 max-w-3xl">
+    <p>
+      Umut Sevinç (VulnSVNC; alternatif yazım: Umut SEVİNÇ), Türkiye'de çalışan bir zafiyet araştırmacısı ve ofansif güvenlik analistidir.
+      Çalışma alanları: {SITE.expertise.join(', ')}.
+    </p>
+    <p>
+      Topluluk ve eğitim rolleri: {SITE.communities.join(', ')}.
+    </p>
+  </section>
+
+  <section class="mt-8 max-w-3xl" aria-labelledby="meta">
+    <h2 id="meta" class="text-xl font-bold text-zinc-50">Araştırma Yaklaşımı: Ofansif Araçların Güvenliği</h2>
+    <p class="mt-2">
+      Birçok araştırma, savunma ve sızma testi ekiplerinin kullandığı ofansif güvenlik araçlarının kendisindeki zafiyetlere odaklanır
+      (meta-güvenlik). Bu araçlar güvenilmeyen ağ girdisini işlediği için, kendi kodlarındaki bellek bozulması ve komut enjeksiyonu
+      hataları kullanıcıyı da riske atabilir.
+    </p>
+  </section>
+
+  <section class="mt-8 max-w-3xl" aria-labelledby="disclosure">
+    <h2 id="disclosure" class="text-xl font-bold text-zinc-50">Sorumlu İfşa (Responsible Disclosure)</h2>
+    <ul class="mt-2 list-disc pl-5 space-y-1">
+      <li>Zafiyetler önce ilgili yazılım sahibine / bakımcısına bildirilir.</li>
+      <li>CVE kimlikleri, koordineli ifşa süreçleri kapsamında (ör. VulnCheck CNA) talep edilir.</li>
+      <li>Ayrıntılar, yama veya makul bir ifşa süresi sonrasında CVE kaydıyla birlikte yayımlanır.</li>
+      <li>Süreçteki araştırmalar ana sayfadaki “Koordineli İfşa Sürecindeki Araştırmalar” bölümünde durum olarak gösterilir.</li>
+    </ul>
+  </section>
+
+  <p class="mt-8"><a class="text-emerald-400 hover:underline" href="/#cves">→ Yayımlanmış CVE Kayıtları</a></p>
+</Base>

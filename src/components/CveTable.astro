@@ -1,0 +1,68 @@
+---
+import { slugOf, topScore, severity } from '../lib/cve';
+interface Props { cves: any[] }
+const { cves } = Astro.props;
+const langs = [...new Set(cves.flatMap((c) => c.language))].sort();
+---
+<div class="flex flex-wrap gap-3 mb-4">
+  <input id="cve-q" type="search" placeholder="Ara: CVE, yazılım, zafiyet türü, CWE… / Search…"
+    class="flex-1 min-w-60 bg-zinc-900 border border-zinc-800 rounded px-3 py-2 text-sm focus:outline-none focus:border-emerald-500" />
+  <select id="cve-lang" class="bg-zinc-900 border border-zinc-800 rounded px-3 py-2 text-sm">
+    <option value="">Tüm diller / All languages</option>
+    {langs.map((l) => <option value={l.toLowerCase()}>{l}</option>)}
+  </select>
+</div>
+
+<div class="overflow-x-auto border border-zinc-800 rounded-lg">
+  <table class="w-full text-sm text-left" id="cve-table">
+    <thead class="bg-zinc-900 text-zinc-400 text-xs uppercase tracking-wide">
+      <tr>
+        <th class="px-3 py-2">CVE ID</th><th class="px-3 py-2">Yazılım</th><th class="px-3 py-2">Zafiyet Türü</th>
+        <th class="px-3 py-2">CWE</th><th class="px-3 py-2">CVSS</th><th class="px-3 py-2">Dil</th><th class="px-3 py-2">Detay</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-zinc-800">
+      {cves.map((c) => {
+        const s = topScore(c);
+        const sev = severity(s);
+        return (
+          <tr data-row data-lang={c.language.join(' ').toLowerCase()}
+              data-text={`${c.id} ${c.product} ${c.vulnType} ${c.cwe.join(' ')} ${c.language.join(' ')}`.toLowerCase()}>
+            <td class="px-3 py-3 font-mono whitespace-nowrap"><a class="text-emerald-400 hover:underline" href={`/cve/${slugOf(c.id)}`}>{c.id}</a></td>
+            <td class="px-3 py-3 font-medium text-zinc-100">{c.product}</td>
+            <td class="px-3 py-3 min-w-64">{c.vulnType}</td>
+            <td class="px-3 py-3 font-mono text-xs whitespace-nowrap">{c.cwe.length ? c.cwe.join(' / ') : '—'}</td>
+            <td class="px-3 py-3 whitespace-nowrap">
+              {s != null
+                ? <span class={`border rounded px-1.5 py-0.5 font-mono text-xs ${sev.cls}`}>{s.toFixed(1)} {sev.label}</span>
+                : <span class="text-zinc-600">—</span>}
+            </td>
+            <td class="px-3 py-3 whitespace-nowrap">{c.language.join(' / ')}</td>
+            <td class="px-3 py-3"><a class="text-emerald-400 hover:underline" href={`/cve/${slugOf(c.id)}`}>Aç →</a></td>
+          </tr>
+        );
+      })}
+    </tbody>
+  </table>
+</div>
+<p id="cve-empty" class="hidden text-sm text-zinc-500 mt-3">Eşleşen kayıt yok.</p>
+
+<script>
+  const q = document.getElementById('cve-q') as HTMLInputElement;
+  const lang = document.getElementById('cve-lang') as HTMLSelectElement;
+  const rows = [...document.querySelectorAll<HTMLElement>('[data-row]')];
+  const empty = document.getElementById('cve-empty')!;
+  function apply() {
+    const term = q.value.trim().toLocaleLowerCase('tr');
+    const l = lang.value;
+    let shown = 0;
+    for (const r of rows) {
+      const ok = (!term || r.dataset.text!.includes(term)) && (!l || r.dataset.lang!.includes(l));
+      r.style.display = ok ? '' : 'none';
+      if (ok) shown++;
+    }
+    empty.classList.toggle('hidden', shown > 0);
+  }
+  q.addEventListener('input', apply);
+  lang.addEventListener('change', apply);
+</script>

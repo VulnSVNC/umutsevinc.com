@@ -1,0 +1,58 @@
+name: Sync CVEs & Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: Sync CVEs (Umut Sevinç / VulnSVNC only)
+        run: node scripts/sync-cves.mjs
+        env:
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
+      - name: Commit new CVEs
+        run: |
+          if [ -n "$(git status --porcelain src/data/cves.json)" ]; then
+            git config user.name "cve-sync-bot"
+            git config user.email "cve-sync-bot@users.noreply.github.com"
+            git add src/data/cves.json
+            git commit -m "chore: sync CVE records"
+            git push origin main
+          fi
+      - run: npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

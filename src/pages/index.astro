@@ -1,0 +1,92 @@
+---
+import Base from '../layouts/Base.astro';
+import SeoSchema from '../components/SeoSchema.astro';
+import CveTable from '../components/CveTable.astro';
+import cves from '../data/cves.json';
+import pending from '../data/pending.json';
+import { SITE } from '../data/site';
+import { topScore } from '../lib/cve';
+
+const scores = cves.map(topScore).filter((s): s is number => s != null);
+const maxScore = scores.length ? Math.max(...scores) : null;
+const techs = [...new Set(cves.flatMap((c) => c.language))];
+const mainTechs = ['C', 'Bash', 'Python', 'JavaScript'];
+const title = 'Umut Sevinç (VulnSVNC) | Türkiye Merkezli Zafiyet Araştırmacısı & CVE Kayıtları';
+---
+<Base
+  title={title}
+  description="Umut Sevinç (VulnSVNC): Türkiye merkezli zafiyet araştırmacısı. Yayımlanmış CVE kayıtları, kök neden analizleri ve ofansif güvenlik araçları üzerine araştırmalar. / Turkey-based vulnerability researcher with published CVEs."
+  path="/"
+  alternates={[
+    { hreflang: 'tr', path: '/tr/hakkinda' },
+    { hreflang: 'en', path: '/en/about' },
+    { hreflang: 'x-default', path: '/' },
+  ]}
+>
+  <SeoSchema slot="head" cves={cves} />
+
+  <section lang="tr" aria-labelledby="hero-h1">
+    <p class="font-mono text-xs text-emerald-400 mb-3">$ whoami → Umut Sevinç aka VulnSVNC · Türkiye 🇹🇷</p>
+    <h1 id="hero-h1" class="text-3xl sm:text-4xl font-bold text-zinc-50 leading-tight">
+      Umut Sevinç (VulnSVNC)<br />
+      <span class="text-emerald-400">Türkiye Merkezli Zafiyet Araştırmacısı</span>
+    </h1>
+    <p class="mt-4 max-w-3xl text-zinc-400">
+      Umut Sevinç (VulnSVNC), Türkiye'de aktif olarak CVE yayımlayan bir zafiyet araştırmacısı ve ofansif güvenlik analistidir.
+      Çalışmaları ofansif güvenlik araçlarındaki zafiyetlere, bellek bozulması (memory corruption) hatalarına ve CVE analizine odaklanır.
+    </p>
+    <section lang="en" aria-labelledby="hero-en" class="mt-4 max-w-3xl">
+      <h2 id="hero-en" class="text-lg font-semibold text-zinc-200">Turkey-based Vulnerability Researcher</h2>
+      <p class="mt-1 text-zinc-400">
+        Umut Sevinç (VulnSVNC) is a vulnerability researcher and offensive security analyst from Türkiye, publishing CVEs
+        in widely used security tooling, with a focus on memory corruption, web application security and CVE analysis.
+      </p>
+    </section>
+    <ul class="mt-5 flex flex-wrap gap-2">
+      {SITE.expertise.map((e) => <li class="text-xs border border-zinc-800 bg-zinc-900 rounded px-2 py-1">{e}</li>)}
+    </ul>
+    <p class="mt-5 flex gap-4 text-sm">
+      <a class="text-emerald-400 hover:underline" rel="me noopener" href={SITE.github}>GitHub</a>
+      <a class="text-emerald-400 hover:underline" rel="me noopener" href={SITE.linkedin}>LinkedIn</a>
+      <a class="text-emerald-400 hover:underline" href="/tr/hakkinda">Hakkında</a>
+      <a class="text-emerald-400 hover:underline" href="/en/about">About</a>
+    </p>
+  </section>
+
+  <section class="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4" aria-label="İstatistikler / Statistics">
+    <div class="border border-zinc-800 rounded-lg p-4 bg-zinc-900/50">
+      <div class="text-3xl font-bold text-zinc-50">{cves.length}</div>
+      <div class="text-xs text-zinc-500 mt-1">Toplam CVE / Total CVEs</div>
+    </div>
+    <div class="border border-zinc-800 rounded-lg p-4 bg-zinc-900/50">
+      <div class="text-3xl font-bold text-zinc-50">{maxScore != null ? maxScore.toFixed(1) : '—'}</div>
+      <div class="text-xs text-zinc-500 mt-1">En yüksek CVSS / Highest CVSS</div>
+    </div>
+    <div class="border border-zinc-800 rounded-lg p-4 bg-zinc-900/50">
+      <div class="text-lg font-bold text-zinc-50">{mainTechs.join(' · ')}</div>
+      <div class="text-xs text-zinc-500 mt-1">Hedef teknolojiler / Targeted tech ({techs.length} dil/teknoloji)</div>
+    </div>
+  </section>
+
+  <section id="cves" class="mt-12" aria-labelledby="cve-h2">
+    <h2 id="cve-h2" class="text-2xl font-bold text-zinc-50 mb-1">Yayımlanmış CVE Kayıtları</h2>
+    <p class="text-sm text-zinc-500 mb-4" lang="en">Published CVE Records — credited to Umut Sevinç (VulnSVNC)</p>
+    <CveTable cves={cves} />
+  </section>
+
+  <section class="mt-12" aria-labelledby="pending-h2">
+    <h2 id="pending-h2" class="text-xl font-bold text-zinc-50 mb-1">Koordineli İfşa Sürecindeki Araştırmalar</h2>
+    <p class="text-sm text-zinc-500 mb-4" lang="en">Pending Advisories — under coordinated disclosure</p>
+    <ul class="space-y-2">
+      {pending.map((p) => (
+        <li class="flex flex-wrap items-center justify-between gap-2 border border-zinc-800 rounded-lg px-4 py-3 bg-zinc-900/50">
+          <span><span class="text-zinc-100 font-medium">{p.product}</span> — {p.title}</span>
+          <span class="text-xs font-mono text-yellow-400 border border-yellow-500/40 rounded px-2 py-0.5">
+            ⏳ {p.process} · ifşa sürecinde / pending
+          </span>
+        </li>
+      ))}
+    </ul>
+    <p class="text-xs text-zinc-600 mt-2">Ayrıntılar CVE yayımlanana kadar paylaşılmaz. Düzenlemek için src/data/pending.json.</p>
+  </section>
+</Base>
