@@ -1,6 +1,11 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { SITE } from '../../data/site';
+import cves from '../../data/cves.json';
+import { topScore } from '../../lib/cve';
+
+const scores = cves.map(topScore).filter((s): s is number => s != null);
+const maxScore = scores.length ? Math.max(...scores) : null;
 ---
 <Base
   title="Hakkında: Umut Sevinç (VulnSVNC) | Türkiye Merkezli Zafiyet Araştırmacısı"
@@ -8,7 +13,8 @@ import { SITE } from '../../data/site';
   path="/tr/hakkinda"
   alternates={[{ hreflang: 'tr', path: '/tr/hakkinda' }, { hreflang: 'en', path: '/en/about' }]}
 >
-  <div class="max-w-2xl">
+  <div class="grid grid-cols-1 lg:grid-cols-[1fr_20rem] gap-10 lg:gap-14 items-start">
+  <div class="max-w-2xl min-w-0">
     <h1 class="font-serif text-3xl text-ink">Umut Sevinç <span class="text-muted">(VulnSVNC)</span></h1>
     <p class="mt-1 text-muted">Türkiye merkezli zafiyet araştırmacısı</p>
 
@@ -41,5 +47,29 @@ import { SITE } from '../../data/site';
     </section>
 
     <p class="mt-10"><a class="text-sm border-b border-line hover:border-brass" href="/#register">Yayımlanmış CVE kayıtları</a></p>
+  </div>
+
+  <aside class="lg:sticky lg:top-8 border border-line bg-surface p-5 font-mono text-xs leading-relaxed" aria-label="Profil özeti">
+    <p class="text-faint text-[11px] tracking-wide">whoami --profile</p>
+    <dl class="mt-4 space-y-3.5 pt-4 border-t border-line-soft">
+      <div>
+        <dt class="text-faint">Yayımlanmış CVE</dt>
+        <dd class="mt-0.5 text-ink">{cves.length}</dd>
+      </div>
+      <div>
+        <dt class="text-faint">En yüksek CVSS</dt>
+        <dd class="mt-0.5 text-brass">{maxScore != null ? maxScore.toFixed(1) : '—'}</dd>
+      </div>
+      <div>
+        <dt class="text-faint">Uzmanlık alanı</dt>
+        <dd class="mt-0.5 text-ink">{SITE.expertise.length} alan</dd>
+      </div>
+    </dl>
+    <p class="mt-5 pt-4 border-t border-line-soft text-faint text-[11px] tracking-wide">bağlantılar</p>
+    <ul class="mt-2.5 space-y-2">
+      <li><a class="text-muted hover:text-brass" rel="me noopener" href={SITE.github}>GitHub</a></li>
+      <li><a class="text-muted hover:text-brass" rel="me noopener" href={SITE.linkedin}>LinkedIn</a></li>
+    </ul>
+  </aside>
   </div>
 </Base>
