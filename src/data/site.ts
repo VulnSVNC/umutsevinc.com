@@ -18,6 +18,8 @@ export const SITE = {
     'Network Security',
     'Reverse Engineering',
     'Memory Corruption (C/C++)',
+    'OS Command Injection',
+    'Remote Code Execution (RCE)',
     'Offensive Security',
   ],
   communities: ['Insiderrs Academy (Kurucu Üye & Eğitmen)', 'SiberGKT', 'HiddenWay'],
