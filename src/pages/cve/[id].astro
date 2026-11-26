@@ -1,4 +1,6 @@
 ---
+import fs from 'node:fs';
+import nodePath from 'node:path';
 import { Code } from 'astro:components';
 import Base from '../../layouts/Base.astro';
 import cves from '../../data/cves.json';
@@ -22,6 +24,9 @@ const sev = severity(score);
 const st = STATUS[cve.status] ?? STATUS.unknown;
 const title = `${cve.id}: ${cve.title} | ${SITE.name}`;
 const description = `${cve.id} — ${cve.vulnType}. Etkilenen: ${cve.product}${cve.affected ? ' (' + cve.affected + ')' : ''}. Araştırmacı: Umut Sevinç (VulnSVNC).`;
+
+const bannerPath = `/images/cve/${cve.id}.webp`;
+const hasBanner = fs.existsSync(nodePath.join(process.cwd(), 'public', bannerPath.slice(1)));
 
 const refsRaw: { label: string; href: string }[] = [
   { label: 'NVD', href: `https://nvd.nist.gov/vuln/detail/${cve.id}` },
@@ -64,7 +69,7 @@ const facts: [string, string][] = [
   ['Dil', cve.language.join(' / ')],
 ];
 ---
-<Base title={title} description={description} path={path} ogType="article">
+<Base title={title} description={description} path={path} ogType="article" image={hasBanner ? bannerPath : undefined}>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={ld(techArticle)} />
     {sourceCode && <script type="application/ld+json" set:html={ld(sourceCode)} />}
@@ -73,6 +78,12 @@ const facts: [string, string][] = [
   <nav class="text-xs text-faint mb-8" aria-label="breadcrumb">
     <a class="hover:text-muted" href="/">Ana Sayfa</a> <span class="mx-1.5">/</span> <a class="hover:text-muted" href="/#register">CVE Kayıtları</a> <span class="mx-1.5">/</span> <span class="font-mono text-muted">{cve.id}</span>
   </nav>
+
+  {hasBanner && (
+    <div class="mb-8 border border-line overflow-hidden">
+      <img src={bannerPath} alt={`${cve.product} — ${cve.title}`} width="1672" height="941" class="w-full h-auto" />
+    </div>
+  )}
 
   <div class="grid grid-cols-1 lg:grid-cols-[1fr_20rem] gap-10 lg:gap-14 items-start">
   <article class="min-w-0">

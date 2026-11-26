@@ -7,9 +7,10 @@ interface Props {
   path: string;
   lang?: 'tr' | 'en';
   ogType?: string;
+  image?: string;
   alternates?: { hreflang: string; path: string }[];
 }
-const { title, description, path, lang = 'tr', ogType = 'website', alternates = [] } = Astro.props;
+const { title, description, path, lang = 'tr', ogType = 'website', image = '/og-image.png', alternates = [] } = Astro.props;
 const base = String(Astro.site).replace(/\/$/, '');
 const url = base + (path === '/' ? '' : path);
 const nav = [
@@ -36,13 +37,13 @@ const nav = [
     <meta property="og:description" content={description} />
     <meta property="og:url" content={url} />
     <meta property="og:locale" content={lang === 'tr' ? 'tr_TR' : 'en_US'} />
-    <meta property="og:image" content={base + '/og-image.png'} />
+    <meta property="og:image" content={base + image} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={base + '/og-image.png'} />
+    <meta name="twitter:image" content={base + image} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
