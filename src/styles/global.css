@@ -1,28 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #f7f5ef;
-  --color-surface: #ffffff;
-  --color-surface-2: #efebe0;
-  --color-line: #ddd6c4;
-  --color-line-soft: #e8e3d5;
-  --color-ink: #211e18;
-  --color-muted: #5c564a;
-  --color-faint: #8f887a;
-  --color-brass: #8a5a1f;
-  --color-brass-dim: #c3a877;
-  --color-critical: #a9342b;
-  --color-high: #9c5812;
-  --color-medium: #8c6f12;
-  --color-low: #2a5f87;
-  --color-patched: #2d7850;
+  --color-bg: #151310;
+  --color-surface: #1c1915;
+  --color-surface-2: #252019;
+  --color-line: #39321f;
+  --color-line-soft: #2a2419;
+  --color-ink: #ece5d3;
+  --color-muted: #a89f8a;
+  --color-faint: #726a58;
+  --color-brass: #d7ac55;
+  --color-brass-dim: #8a703f;
+  --color-critical: #e2685c;
+  --color-high: #dd9d52;
+  --color-medium: #d2bc5a;
+  --color-low: #6fa3d6;
+  --color-patched: #5cb98a;
 
   --font-serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
   --font-sans: "Inter", -apple-system, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 
-:root { color-scheme: light; }
+:root { color-scheme: dark; }
 
 html {
   scroll-behavior: smooth;
@@ -32,10 +32,10 @@ body {
   font-family: var(--font-sans);
   background: var(--color-bg);
   background-image:
-    radial-gradient(ellipse 1200px 500px at 50% -10%, color-mix(in srgb, var(--color-brass) 5%, transparent), transparent);
+    radial-gradient(ellipse 1200px 500px at 50% -10%, color-mix(in srgb, var(--color-brass) 7%, transparent), transparent);
 }
 
-::selection { background: color-mix(in srgb, var(--color-brass) 22%, transparent); }
+::selection { background: color-mix(in srgb, var(--color-brass) 28%, transparent); }
 
 .font-feature-tab {
   font-variant-numeric: tabular-nums;
@@ -155,12 +155,12 @@ pre.astro-code {
   font-size: 0.8rem;
   line-height: 1.6;
   border: 1px solid var(--color-line);
-  background: var(--color-ink);
+  background: var(--color-surface);
 }
 .writeup pre code {
   background: none;
   padding: 0;
-  color: var(--color-bg);
+  color: var(--color-ink);
   font-size: 1em;
   overflow-wrap: normal;
   word-break: normal;
