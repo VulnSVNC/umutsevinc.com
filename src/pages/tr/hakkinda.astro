@@ -36,6 +36,21 @@ const maxScore = scores.length ? Math.max(...scores) : null;
       </p>
     </section>
 
+    <section class="mt-10 pt-8 border-t border-line" aria-labelledby="credentials">
+      <h2 id="credentials" class="font-serif text-xl text-ink">Yetkilendirmeler</h2>
+      <ul class="mt-3 space-y-4">
+        {SITE.credentials.map((c) => (
+          <li class="flex items-start gap-3">
+            <span class="mt-2 h-1.5 w-1.5 rounded-full bg-patched shrink-0" aria-hidden="true"></span>
+            <div>
+              <p class="text-ink">{c.name} <span class="text-faint font-normal">— {c.issued.tr}</span></p>
+              <p class="mt-1 text-sm text-muted leading-relaxed">{c.description.tr}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </section>
+
     <section class="mt-10 pt-8 border-t border-line" aria-labelledby="disclosure">
       <h2 id="disclosure" class="font-serif text-xl text-ink">Sorumlu ifşa</h2>
       <ul class="mt-3 space-y-2 leading-relaxed">
@@ -63,6 +78,10 @@ const maxScore = scores.length ? Math.max(...scores) : null;
       <div>
         <dt class="text-faint">Uzmanlık alanı</dt>
         <dd class="mt-0.5 text-ink">{SITE.expertise.length} alan</dd>
+      </div>
+      <div>
+        <dt class="text-faint">Yetkilendirme</dt>
+        <dd class="mt-0.5 text-ink">Anthropic Defense Access</dd>
       </div>
     </dl>
     <p class="mt-5 pt-4 border-t border-line-soft text-faint text-[11px] tracking-wide">bağlantılar</p>

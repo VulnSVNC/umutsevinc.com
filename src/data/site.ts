@@ -23,6 +23,16 @@ export const SITE = {
     'Offensive Security',
   ],
   communities: ['Insiderrs Academy (Kurucu Üye & Eğitmen)', 'SiberGKT', 'HiddenWay'],
+  credentials: [
+    {
+      name: 'Anthropic Defense Access',
+      issued: { tr: 'Kasım 2026', en: 'November 2026' },
+      description: {
+        tr: 'Zafiyet triyajı ve doğrulaması, zararlı yazılım analizi ve tersine mühendislik gibi savunma amaçlı çalışmalar için Anthropic tarafından onaylanan erişim yetkisi.',
+        en: 'Access granted by Anthropic for defensive work such as vulnerability triage and verification, malware analysis, and reverse engineering.',
+      },
+    },
+  ],
   description:
     "Umut Sevinç (VulnSVNC): Türkiye merkezli zafiyet araştırmacısı. Yayımlanmış CVE kayıtları, kök neden analizleri ve ofansif güvenlik araçları üzerine araştırmalar. Turkey-based vulnerability researcher with published CVEs.",
 };
