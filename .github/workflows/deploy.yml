@@ -32,13 +32,13 @@ jobs:
         run: node scripts/sync-cves.mjs
         env:
           NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
-      - name: Commit new CVEs
+      - name: Commit new CVEs and auto-fetched write-ups
         run: |
-          if [ -n "$(git status --porcelain src/data/cves.json)" ]; then
+          git add src/data/cves.json src/data/writeups
+          if [ -n "$(git status --porcelain --cached)" ]; then
             git config user.name "cve-sync-bot"
             git config user.email "cve-sync-bot@users.noreply.github.com"
-            git add src/data/cves.json
-            git commit -m "chore: sync CVE records"
+            git commit -m "chore: sync CVE records and write-ups"
             git push origin main
           fi
       - run: npm run build

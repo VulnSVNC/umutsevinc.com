@@ -6,15 +6,22 @@
 //    credits veya references alanında "Umut Sevinç", "Umut SEVİNÇ" veya "VulnSVNC" geçenler kabul edilir.
 // 3) Elle düzenlenmiş alanlar (rootCause, poc, impact...) korunur; yeni kayıtlar eklenir.
 //    Doğrulanamayan kayıtlar silinmez, uyarı olarak raporlanır (ağ hatası kayıt kaybettirmesin).
+// 4) Her CVE için github.com/VulnSVNC/<CVE-ID> reposundaki README.md otomatik çekilir ve
+//    src/data/writeups/<id>.md olarak kaydedilir — bu dosya mevcutsa (elle düzenlenmiş/temizlenmiş
+//    bir write-up varsa) DOKUNULMAZ; yalnızca henüz yerelde write-up'ı olmayan (genelde yeni) CVE'ler
+//    için otomatik çekilir. CVE detay sayfası bu dosyayı varsa tam metin olarak gösterir.
 //
 // Kullanım:  node scripts/sync-cves.mjs        (NVD_API_KEY ortam değişkeni isteğe bağlı)
 
-import { readFile, writeFile } from 'node:fs/promises';
+import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DATA = path.join(ROOT, 'src/data/cves.json');
+const WRITEUPS_DIR = path.join(ROOT, 'src/data/writeups');
+const slugOf = (id) => id.toLowerCase();
 const NAMES = ['Umut Sevinç', 'Umut SEVİNÇ', 'VulnSVNC'];
 const norm = (s) => String(s).toLocaleLowerCase('tr').normalize('NFC');
 const NEEDLES = NAMES.map(norm);
@@ -89,12 +96,41 @@ function toEntry(record) {
     status: 'unknown',
     affected: cna.affected?.[0]?.versions?.[0]?.version ?? null,
     fixedIn: null,
-    repo: null,
+    repo: `https://github.com/VulnSVNC/${id}`,
     rootCause: en ? { en, tr: en } : null,
     impact: null,
     poc: null,
     references: refs,
   };
+}
+
+// github.com/VulnSVNC/<CVE-ID> reposunun README.md'sini dener (main, sonra master dalı).
+async function fetchReadme(id) {
+  for (const branch of ['main', 'master']) {
+    const url = `https://raw.githubusercontent.com/VulnSVNC/${id}/${branch}/README.md`;
+    try {
+      const res = await fetch(url, { headers: { 'User-Agent': 'vulnsvnc-site-sync' } });
+      if (res.ok) {
+        const text = await res.text();
+        if (text.trim()) return text;
+      }
+    } catch {
+      /* repo veya dal yok — sıradaki dalı dene */
+    }
+  }
+  return null;
+}
+
+// Yerelde elle hazırlanmış/temizlenmiş bir write-up varsa ASLA üzerine yazmaz.
+// Yalnızca write-up dosyası henüz yoksa (tipik olarak yeni bir CVE), README'yi indirip kaydeder.
+async function syncWriteup(id) {
+  const file = path.join(WRITEUPS_DIR, `${slugOf(id)}.md`);
+  if (existsSync(file)) return null;
+  const readme = await fetchReadme(id);
+  if (!readme) return null;
+  await mkdir(WRITEUPS_DIR, { recursive: true });
+  await writeFile(file, readme.endsWith('\n') ? readme : readme + '\n');
+  return file;
 }
 
 async function main() {
@@ -105,6 +141,7 @@ async function main() {
   const out = new Map();
   const unverified = [];
   const added = [];
+  const writeupsSynced = [];
 
   for (const id of [...candidates].sort()) {
     let record = null;
@@ -123,10 +160,23 @@ async function main() {
     }
   }
 
+  // Her bilinen CVE için (yeni olsun olmasın) kendi reposundaki README.md'yi dene;
+  // yereldeki elle hazırlanmış write-up'lar asla ezilmez (syncWriteup zaten kontrol ediyor).
+  for (const id of out.keys()) {
+    try {
+      const written = await syncWriteup(id);
+      if (written) writeupsSynced.push(id);
+    } catch (e) {
+      console.warn(`! ${id} için README senkronizasyonu başarısız: ${e.message}`);
+    }
+  }
+
   const list = [...out.values()].sort((a, b) => b.id.localeCompare(a.id));
   await writeFile(DATA, JSON.stringify(list, null, 2) + '\n');
 
   console.log(`Toplam: ${list.length} | Yeni: ${added.length ? added.join(', ') : '-'}`);
+  if (writeupsSynced.length)
+    console.log(`Write-up README'den otomatik eklendi: ${writeupsSynced.join(', ')}`);
   if (unverified.length)
     console.warn(`Uyarı: cvelistV5'te henüz doğrulanamayan (korunan) kayıtlar: ${unverified.join(', ')}`);
 }
