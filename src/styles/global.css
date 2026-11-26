@@ -58,6 +58,25 @@ pre.astro-code {
   html { scroll-behavior: auto; }
 }
 
+/* ---- One-time hero entrance (not repeated, not scroll-triggered) ---- */
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.reveal {
+  opacity: 0;
+  animation: reveal-up 0.7s cubic-bezier(0.16, 0.8, 0.24, 1) forwards;
+}
+.reveal-1 { animation-delay: 0s; }
+.reveal-2 { animation-delay: 0.1s; }
+.reveal-3 { animation-delay: 0.2s; }
+.reveal-4 { animation-delay: 0.32s; }
+.reveal-5 { animation-delay: 0.44s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; animation: none; transform: none; }
+}
+
 /* ---- Full write-up markdown rendering (CVE detail pages) ---- */
 .writeup {
   color: var(--color-ink);
