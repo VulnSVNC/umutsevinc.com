@@ -77,6 +77,18 @@ pre.astro-code {
   .reveal { opacity: 1; animation: none; transform: none; }
 }
 
+/* ---- Persistent "actively monitored" indicator (pending research) ---- */
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 0.55; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+.pulse-ring {
+  animation: pulse-ring 2.2s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pulse-ring { animation: none; opacity: 0; }
+}
+
 /* ---- Full write-up markdown rendering (CVE detail pages) ---- */
 .writeup {
   color: var(--color-ink);
