@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import SeoSchema from '../components/SeoSchema.astro';
 import CveTable from '../components/CveTable.astro';
 import TerminalHero from '../components/TerminalHero.astro';
+import ToolGallery from '../components/ToolGallery.astro';
 import cves from '../data/cves.json';
 import pending from '../data/pending.json';
 import { SITE } from '../data/site';
@@ -82,6 +83,8 @@ const title = 'Umut Sevinç (VulnSVNC) | Türkiye Merkezli Zafiyet Araştırmac�
       </div>
     </div>
   </section>
+
+  <ToolGallery />
 
   <section id="register" class="mt-14 scroll-mt-20" aria-labelledby="cve-h2">
     <div class="flex items-baseline justify-between gap-4 mb-2">
