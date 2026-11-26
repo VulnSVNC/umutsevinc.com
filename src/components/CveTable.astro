@@ -4,7 +4,7 @@ interface Props { cves: any[] }
 const { cves } = Astro.props;
 const langs = [...new Set(cves.flatMap((c) => c.language))].sort();
 ---
-<div class="flex flex-wrap gap-3 mb-5">
+<div class="flex flex-wrap gap-3 mb-6">
   <input id="cve-q" type="search" placeholder="Ara: CVE, yazılım, zafiyet türü, CWE…"
     class="flex-1 min-w-60 bg-transparent border-b border-line text-sm py-2 placeholder:text-faint focus:outline-none focus:border-brass" />
   <select id="cve-lang" class="bg-transparent border-b border-line text-sm py-2 text-muted focus:outline-none focus:border-brass">
@@ -13,77 +13,33 @@ const langs = [...new Set(cves.flatMap((c) => c.language))].sort();
   </select>
 </div>
 
-<!-- Masaüstü / tablet: tam tablo (md ve üzeri) -->
-<div class="hidden md:block overflow-x-auto">
-  <table class="w-full text-sm text-left border-collapse" id="cve-table">
-    <thead class="text-muted text-xs">
-      <tr class="border-b border-line">
-        <th class="py-2 pr-3 font-normal">CVE</th>
-        <th class="py-2 pr-3 font-normal">Yazılım</th>
-        <th class="py-2 pr-3 font-normal">Zafiyet türü</th>
-        <th class="py-2 pr-3 font-normal">CWE</th>
-        <th class="py-2 pr-3 font-normal">CVSS</th>
-        <th class="py-2 pr-3 font-normal">Dil</th>
-        <th class="py-2 font-normal"><span class="sr-only">Detay</span></th>
-      </tr>
-    </thead>
-    <tbody class="divide-y divide-line-soft">
-      {cves.map((c) => {
-        const s = topScore(c);
-        const sev = severity(s);
-        return (
-          <tr data-row data-lang={c.language.join(' ').toLowerCase()}
-              data-text={`${c.id} ${c.product} ${c.vulnType} ${c.cwe.join(' ')} ${c.language.join(' ')}`.toLowerCase()}>
-            <td class="py-3 pr-3 whitespace-nowrap"><a class="font-mono text-[13px] text-ink hover:text-brass" href={`/cve/${slugOf(c.id)}`}>{c.id}</a></td>
-            <td class="py-3 pr-3 text-ink">{c.product}</td>
-            <td class="py-3 pr-3 min-w-56 text-muted">{c.vulnType}</td>
-            <td class="py-3 pr-3 font-mono text-xs text-muted whitespace-nowrap">{c.cwe.length ? c.cwe.join(', ') : '—'}</td>
-            <td class="py-3 pr-3 whitespace-nowrap">
-              {s != null ? (
-                <span class="inline-flex items-center gap-1.5 font-mono text-xs">
-                  <span class={`inline-block w-1.5 h-1.5 rounded-full ${sev.dot}`}></span>
-                  <span class={sev.text}>{s.toFixed(1)}</span>
-                </span>
-              ) : <span class="text-faint">—</span>}
-            </td>
-            <td class="py-3 pr-3 text-muted whitespace-nowrap">{c.language.join(' / ')}</td>
-            <td class="py-3 whitespace-nowrap"><a class="text-sm text-muted hover:text-ink border-b border-line hover:border-brass" href={`/cve/${slugOf(c.id)}`}>Aç</a></td>
-          </tr>
-        );
-      })}
-    </tbody>
-  </table>
-</div>
-
-<!-- Mobil: dar ekranda yatay scroll yerine okunabilir liste -->
-<ul class="md:hidden divide-y divide-line-soft">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="cve-grid">
   {cves.map((c) => {
     const s = topScore(c);
     const sev = severity(s);
     return (
-      <li data-row data-lang={c.language.join(' ').toLowerCase()}
-          data-text={`${c.id} ${c.product} ${c.vulnType} ${c.cwe.join(' ')} ${c.language.join(' ')}`.toLowerCase()}>
-        <a href={`/cve/${slugOf(c.id)}`} class="block py-4">
-          <div class="flex items-center justify-between gap-3">
-            <span class="font-mono text-xs text-brass">{c.id}</span>
-            {s != null ? (
-              <span class="inline-flex items-center gap-1.5 font-mono text-xs shrink-0">
-                <span class={`inline-block w-1.5 h-1.5 rounded-full ${sev.dot}`}></span>
-                <span class={sev.text}>{s.toFixed(1)}</span>
-              </span>
-            ) : <span class="text-faint text-xs shrink-0">—</span>}
-          </div>
-          <p class="mt-1.5 text-ink font-medium">{c.product}</p>
-          <p class="mt-0.5 text-sm text-muted leading-snug line-clamp-2">{c.vulnType}</p>
-          <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-faint">
-            <span class="font-mono">{c.cwe.length ? c.cwe.join(', ') : '—'}</span>
-            <span>{c.language.join(' / ')}</span>
-          </div>
-        </a>
-      </li>
+      <a href={`/cve/${slugOf(c.id)}`} data-row data-lang={c.language.join(' ').toLowerCase()}
+          data-text={`${c.id} ${c.product} ${c.vulnType} ${c.cwe.join(' ')} ${c.language.join(' ')}`.toLowerCase()}
+          class="group block border border-line p-5 hover:border-brass-dim transition-colors">
+        <div class="flex items-center justify-between gap-3">
+          <span class="font-mono text-xs text-brass">{c.id}</span>
+          {s != null ? (
+            <span class="inline-flex items-center gap-1.5 font-mono text-xs shrink-0">
+              <span class={`inline-block w-1.5 h-1.5 rounded-full ${sev.dot}`}></span>
+              <span class={sev.text}>{s.toFixed(1)}</span>
+            </span>
+          ) : <span class="text-faint text-xs shrink-0">—</span>}
+        </div>
+        <h3 class="mt-2.5 font-serif text-lg text-ink group-hover:text-brass transition-colors">{c.product}</h3>
+        <p class="mt-1.5 text-sm text-muted leading-relaxed line-clamp-2">{c.vulnType}</p>
+        <div class="mt-4 flex flex-wrap gap-1.5">
+          {c.cwe.slice(0, 3).map((w: string) => <span class="text-[11px] font-mono text-faint border border-line px-1.5 py-0.5">{w}</span>)}
+          <span class="text-[11px] text-faint border border-line px-1.5 py-0.5">{c.language.join(' / ')}</span>
+        </div>
+      </a>
     );
   })}
-</ul>
+</div>
 <p id="cve-empty" class="hidden text-sm text-faint mt-4">Eşleşen kayıt yok.</p>
 
 <script>

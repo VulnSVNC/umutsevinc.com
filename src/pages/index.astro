@@ -45,10 +45,10 @@ const title = 'Umut Sevinç (VulnSVNC) | Türkiye Merkezli Zafiyet Araştırmac�
       {SITE.expertise.map((e) => <li class="text-xs text-muted border border-line px-2.5 py-1">{e}</li>)}
     </ul>
 
-    <p class="mt-7 flex gap-5 text-sm">
-      <a class="text-ink border-b border-line hover:border-brass transition-colors" rel="me noopener" href={SITE.github}>GitHub</a>
-      <a class="text-ink border-b border-line hover:border-brass transition-colors" rel="me noopener" href={SITE.linkedin}>LinkedIn</a>
-      <a class="text-ink border-b border-line hover:border-brass transition-colors" href="/tr/hakkinda">Metodoloji</a>
+    <p class="mt-8 flex flex-wrap gap-3 text-sm">
+      <a class="text-ink border border-ink px-4 py-2 hover:bg-ink hover:text-bg transition-colors" rel="me noopener" href={SITE.github}>GitHub</a>
+      <a class="text-ink border border-line px-4 py-2 hover:border-brass transition-colors" rel="me noopener" href={SITE.linkedin}>LinkedIn</a>
+      <a class="text-muted border border-line px-4 py-2 hover:border-brass hover:text-ink transition-colors" href="/tr/hakkinda">Metodoloji</a>
     </p>
   </section>
 
@@ -70,15 +70,16 @@ const title = 'Umut Sevinç (VulnSVNC) | Türkiye Merkezli Zafiyet Araştırmac�
   </section>
 
   <section id="register" class="mt-14 scroll-mt-20" aria-labelledby="cve-h2">
-    <div class="flex items-baseline justify-between gap-4 mb-5">
-      <h2 id="cve-h2" class="font-serif text-2xl text-ink">Yayımlanmış CVE Kayıtları</h2>
-      <p class="text-xs text-faint shrink-0" lang="en">Published CVE Records</p>
+    <div class="flex items-baseline justify-between gap-4 mb-2">
+      <h2 id="cve-h2" class="font-serif text-2xl text-ink">Seçilmiş Çalışmalar</h2>
+      <p class="text-xs text-faint shrink-0" lang="en">Selected Work</p>
     </div>
+    <p class="text-sm text-muted mb-5">Yayımlanmış CVE kayıtları ve kök neden analizleri.</p>
     <CveTable cves={sortedCves} />
   </section>
 
   <section class="mt-14" aria-labelledby="pending-h2">
-    <h2 id="pending-h2" class="font-serif text-2xl text-ink mb-5">Koordineli İfşa Sürecindeki Araştırmalar</h2>
+    <h2 id="pending-h2" class="font-serif text-2xl text-ink mb-5">Devam Eden Araştırmalar</h2>
     <ul class="space-y-3">
       {pending.map((p) => (
         <li class="border-l-2 border-brass-dim pl-4 py-1">
