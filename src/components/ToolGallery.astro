@@ -1,22 +1,24 @@
 ---
 import { slugOf, topScore, severity } from '../lib/cve';
+import FlowIcon from './FlowIcon.astro';
 import cvesData from '../data/cves.json';
 
-// Short, real root-cause → trigger → impact labels per CVE, drawn as a flow diagram.
-const flows: Record<string, [string, string, string]> = {
-  'CVE-2026-125399': ['rogue essid', 'eval()', 'cmd exec'],
-  'CVE-2026-133274': ['set-cookie', 'analyze_resp()', 'oob write'],
-  'CVE-2026-134753': ['udp:2001 pkt', 'decode_sniffer()', 'oob write'],
-  'CVE-2026-136131': ['ip rr option', 'display_ipopt()', 'oob write'],
-  'CVE-2026-133305': ['302 redirect', 'cookie fwd', 'cred leak'],
-  'CVE-2026-134758': ['redirect url', 'html report', 'stored xss'],
+// Short, real root-cause → trigger → impact labels per CVE, shown as a caption,
+// plus a hand-drawn category icon (see FlowIcon.astro) — no real tool logos.
+const flows: Record<string, { steps: [string, string, string]; icon: string }> = {
+  'CVE-2026-125399': { steps: ['rogue essid', 'eval()', 'cmd exec'], icon: 'fluxion' },
+  'CVE-2026-133274': { steps: ['set-cookie', 'analyze_resp()', 'oob write'], icon: 'hydra' },
+  'CVE-2026-134753': { steps: ['udp:2001 pkt', 'decode_sniffer()', 'oob write'], icon: 'dsniff' },
+  'CVE-2026-136131': { steps: ['ip rr option', 'display_ipopt()', 'oob write'], icon: 'hping3' },
+  'CVE-2026-133305': { steps: ['302 redirect', 'cookie fwd', 'cred leak'], icon: 'sqlmap' },
+  'CVE-2026-134758': { steps: ['redirect url', 'html report', 'stored xss'], icon: 'wfuzz' },
 };
 
 const items = (cvesData as any[])
   .filter((c) => flows[c.id])
   .map((c) => {
     const score = topScore(c);
-    return { cve: c, flow: flows[c.id], score, sev: severity(score) };
+    return { cve: c, flow: flows[c.id].steps, icon: flows[c.id].icon, score, sev: severity(score) };
   })
   .sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
 ---
@@ -35,38 +37,25 @@ const items = (cvesData as any[])
     role="region"
     aria-label="Etki zinciri galerisi, yatay kaydırılabilir"
   >
-    {items.map(({ cve, flow, score, sev }) => (
+    {items.map(({ cve, flow, icon, score, sev }) => (
       <a
         href={`/cve/${slugOf(cve.id)}`}
-        class="group shrink-0 snap-start w-[250px] sm:w-[270px] border border-line bg-surface hover:border-brass-dim transition-colors"
+        class="group shrink-0 snap-start w-[300px] sm:w-[340px] border border-line bg-surface hover:border-brass-dim transition-colors"
       >
         <div class={`h-[3px] ${sev.dot}`}></div>
-        <div class="aspect-[4/3] p-4">
-          <svg viewBox="0 0 220 90" class="w-full h-full" aria-hidden="true">
-            <defs>
-              <marker id={`arrow-${cve.id}`} viewBox="0 0 8 8" refX="6" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-                <path d="M0,0 L8,4 L0,8 Z" style="fill:var(--color-faint)" />
-              </marker>
-            </defs>
-            <line x1="18" y1="50" x2="96" y2="50" style="stroke:var(--color-line);stroke-width:1.4" marker-end={`url(#arrow-${cve.id})`} />
-            <line x1="124" y1="50" x2="202" y2="50" style={`stroke:var(--color-line);stroke-width:1.4`} marker-end={`url(#arrow-${cve.id})`} />
-
-            <circle cx="12" cy="50" r="3.5" style="fill:var(--color-faint)" />
-            <circle cx="110" cy="50" r="3.5" style="fill:var(--color-muted)" />
-            <circle cx="208" cy="50" r="4" class={sev.text} style="fill:currentColor" />
-
-            <text x="12" y="34" text-anchor="start" style="font-family:var(--font-mono);font-size:8px;fill:var(--color-faint)">{flow[0]}</text>
-            <text x="110" y="34" text-anchor="middle" style="font-family:var(--font-mono);font-size:8px;fill:var(--color-muted)">{flow[1]}</text>
-            <text x="208" y="34" text-anchor="end" class={sev.text} style="font-family:var(--font-mono);font-size:8px">{flow[2]}</text>
-          </svg>
+        <div class={`h-44 sm:h-48 flex items-center justify-center bg-surface-2/50 ${sev.text}`}>
+          <FlowIcon kind={icon} class="w-28 h-28 sm:w-32 sm:h-32" />
         </div>
-        <div class="px-4 pb-4 pt-3 border-t border-line">
+        <p class="font-mono text-[11px] px-4 py-2.5 border-y border-line-soft text-faint truncate">
+          {flow[0]} <span class="mx-1 text-line">→</span><span class="text-muted">{flow[1]}</span> <span class="mx-1 text-line">→</span><span class={sev.text}>{flow[2]}</span>
+        </p>
+        <div class="px-4 pb-5 pt-3.5">
           <div class="flex items-center justify-between gap-2">
             <span class="font-mono text-xs text-brass">{cve.id}</span>
             {score != null ? <span class={`font-mono text-xs ${sev.text}`}>{score.toFixed(1)}</span> : null}
           </div>
-          <h3 class="mt-1.5 font-serif text-base text-ink group-hover:text-brass transition-colors">{cve.product}</h3>
-          <p class="mt-1 text-xs text-faint line-clamp-1">{cve.vulnType}</p>
+          <h3 class="mt-1.5 font-serif text-lg text-ink group-hover:text-brass transition-colors">{cve.product}</h3>
+          <p class="mt-1 text-xs text-faint line-clamp-2 leading-relaxed">{cve.vulnType}</p>
         </div>
       </a>
     ))}
