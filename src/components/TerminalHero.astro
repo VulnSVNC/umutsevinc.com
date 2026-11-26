@@ -1,0 +1,99 @@
+---
+interface Props {
+  total: number;
+  maxScore: number;
+  latestId: string;
+  latestProduct: string;
+  pendingProduct: string;
+}
+const { total, maxScore, latestId, latestProduct, pendingProduct } = Astro.props;
+
+const lines = [
+  { p: '$ ', c: 'research --status' },
+  { p: '', c: `${total} CVE kaydı yayımlandı`, dim: true },
+  { p: '', c: `en yüksek önem derecesi: ${maxScore.toFixed(1)} (Kritik)`, dim: true },
+  { p: '', c: `son kayıt: ${latestId} — ${latestProduct}`, dim: true },
+  { p: '', c: `sırada: ${pendingProduct} inceleniyor`, dim: true, brass: true },
+];
+---
+
+<div class="terminal border border-line bg-surface font-mono text-[13px] leading-relaxed w-full max-w-md" aria-hidden="true">
+  <div class="flex items-center gap-2 border-b border-line px-4 py-2.5">
+    <span class="relative flex h-1.5 w-1.5">
+      <span class="pulse-ring absolute inline-flex h-full w-full rounded-full bg-patched"></span>
+      <span class="relative inline-flex h-1.5 w-1.5 rounded-full bg-patched"></span>
+    </span>
+    <span class="text-faint text-[11px] tracking-wide">umut@vulnsvnc:~</span>
+  </div>
+  <pre id="term-out" class="px-4 py-4 whitespace-pre-wrap break-words min-h-[128px]"><span id="term-cursor" class="term-cursor">_</span></pre>
+</div>
+
+<script define:vars={{ lines }}>
+  const out = document.getElementById('term-out');
+  const cursor = document.getElementById('term-cursor');
+
+  function colorFor(line) {
+    if (line.brass) return 'color:var(--color-brass)';
+    if (line.dim) return 'color:var(--color-muted)';
+    return 'color:var(--color-ink)';
+  }
+
+  async function typeLine(line) {
+    const span = document.createElement('span');
+    span.style.cssText = colorFor(line);
+    out.insertBefore(span, cursor);
+    const prompt = line.p || '';
+    const text = prompt + line.c;
+    for (let i = 0; i < text.length; i++) {
+      span.textContent += text[i];
+      const delay = prompt && i < prompt.length ? 55 : line.p === '' ? 10 : 22;
+      await new Promise((r) => setTimeout(r, delay));
+    }
+    const br = document.createElement('br');
+    out.insertBefore(br, cursor);
+  }
+
+  async function run() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      for (const line of lines) {
+        const span = document.createElement('span');
+        span.style.cssText = colorFor(line);
+        span.textContent = (line.p || '') + line.c;
+        out.insertBefore(span, cursor);
+        out.insertBefore(document.createElement('br'), cursor);
+      }
+      return;
+    }
+    for (const line of lines) {
+      await typeLine(line);
+      await new Promise((r) => setTimeout(r, 220));
+    }
+  }
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting) {
+        run();
+        io.disconnect();
+      }
+    },
+    { threshold: 0.3 }
+  );
+  io.observe(out);
+</script>
+
+<style>
+  .terminal { box-shadow: 0 20px 50px -30px rgba(0, 0, 0, 0.6); }
+  .term-cursor {
+    display: inline-block;
+    color: var(--color-brass);
+    animation: term-blink 1s step-end infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .term-cursor { animation: none; }
+  }
+  @keyframes term-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+</style>

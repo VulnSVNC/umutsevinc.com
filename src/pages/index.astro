@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import SeoSchema from '../components/SeoSchema.astro';
 import CveTable from '../components/CveTable.astro';
+import TerminalHero from '../components/TerminalHero.astro';
 import cves from '../data/cves.json';
 import pending from '../data/pending.json';
 import { SITE } from '../data/site';
@@ -11,6 +12,7 @@ const scores = cves.map(topScore).filter((s): s is number => s != null);
 const maxScore = scores.length ? Math.max(...scores) : null;
 const languages = [...new Set(cves.flatMap((c) => c.language))];
 const sortedCves = [...cves].sort((a, b) => (topScore(b) ?? -1) - (topScore(a) ?? -1));
+const latestCve = [...cves].sort((a, b) => b.id.localeCompare(a.id))[0];
 const title = 'Umut Sevinç (VulnSVNC) | Türkiye Merkezli Zafiyet Araştırmacısı & CVE Kayıtları';
 ---
 <Base
@@ -25,31 +27,43 @@ const title = 'Umut Sevinç (VulnSVNC) | Türkiye Merkezli Zafiyet Araştırmac�
 >
   <SeoSchema slot="head" cves={cves} />
 
-  <section lang="tr" aria-labelledby="hero-h1" class="max-w-2xl">
-    <p class="reveal reveal-1 text-sm text-muted mb-4">Bağımsız zafiyet araştırması, Türkiye</p>
-    <h1 id="hero-h1" class="reveal reveal-2 font-serif text-4xl sm:text-[2.75rem] leading-[1.15] text-ink">
-      Umut Sevinç
-    </h1>
-    <p class="reveal reveal-3 mt-6 text-[1.05rem] leading-relaxed text-ink/90">
-      Zafiyet araştırmacısı ve ofansif güvenlik analisti. Çalışmaları CVE analizine; bellek bozulması
-      (memory corruption), işletim sistemi komut enjeksiyonu ve uzaktan kod çalıştırma (RCE) başta olmak üzere,
-      yaygın kullanılan güvenlik araçlarının kendisindeki zafiyetlere odaklanır.
-    </p>
-    <p lang="en" class="reveal reveal-3 mt-3 text-[0.95rem] leading-relaxed text-muted">
-      Vulnerability researcher and offensive security analyst based in Türkiye, publishing CVEs in
-      widely used security tooling, with a focus on memory corruption, OS command injection, and
-      remote code execution (RCE).
-    </p>
+  <section lang="tr" aria-labelledby="hero-h1" class="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 lg:gap-14 items-start">
+    <div class="max-w-2xl">
+      <p class="reveal reveal-1 text-sm text-muted mb-4">Bağımsız zafiyet araştırması, Türkiye</p>
+      <h1 id="hero-h1" class="reveal reveal-2 font-serif text-4xl sm:text-[2.75rem] leading-[1.15] text-ink">
+        Umut Sevinç
+      </h1>
+      <p class="reveal reveal-3 mt-6 text-[1.05rem] leading-relaxed text-ink/90">
+        Zafiyet araştırmacısı ve ofansif güvenlik analisti. Çalışmaları CVE analizine; bellek bozulması
+        (memory corruption), işletim sistemi komut enjeksiyonu ve uzaktan kod çalıştırma (RCE) başta olmak üzere,
+        yaygın kullanılan güvenlik araçlarının kendisindeki zafiyetlere odaklanır.
+      </p>
+      <p lang="en" class="reveal reveal-3 mt-3 text-[0.95rem] leading-relaxed text-muted">
+        Vulnerability researcher and offensive security analyst based in Türkiye, publishing CVEs in
+        widely used security tooling, with a focus on memory corruption, OS command injection, and
+        remote code execution (RCE).
+      </p>
 
-    <ul class="reveal reveal-4 mt-6 flex flex-wrap gap-2">
-      {SITE.expertise.map((e) => <li class="text-xs text-muted border border-line px-2.5 py-1">{e}</li>)}
-    </ul>
+      <ul class="reveal reveal-4 mt-6 flex flex-wrap gap-2">
+        {SITE.expertise.map((e) => <li class="text-xs text-muted border border-line px-2.5 py-1">{e}</li>)}
+      </ul>
 
-    <p class="reveal reveal-5 mt-8 flex flex-wrap gap-3 text-sm">
-      <a class="text-ink border border-ink px-4 py-2 hover:bg-ink hover:text-bg transition-colors" rel="me noopener" href={SITE.github}>GitHub</a>
-      <a class="text-ink border border-line px-4 py-2 hover:border-brass transition-colors" rel="me noopener" href={SITE.linkedin}>LinkedIn</a>
-      <a class="text-muted border border-line px-4 py-2 hover:border-brass hover:text-ink transition-colors" href="/tr/hakkinda">Metodoloji</a>
-    </p>
+      <p class="reveal reveal-5 mt-8 flex flex-wrap gap-3 text-sm">
+        <a class="text-ink border border-ink px-4 py-2 hover:bg-ink hover:text-bg transition-colors" rel="me noopener" href={SITE.github}>GitHub</a>
+        <a class="text-ink border border-line px-4 py-2 hover:border-brass transition-colors" rel="me noopener" href={SITE.linkedin}>LinkedIn</a>
+        <a class="text-muted border border-line px-4 py-2 hover:border-brass hover:text-ink transition-colors" href="/tr/hakkinda">Metodoloji</a>
+      </p>
+    </div>
+
+    <div class="reveal reveal-1 order-first lg:order-none lg:pt-1">
+      <TerminalHero
+        total={cves.length}
+        maxScore={maxScore ?? 0}
+        latestId={latestCve.id}
+        latestProduct={latestCve.product}
+        pendingProduct={pending[0]?.product ?? '—'}
+      />
+    </div>
   </section>
 
   <section class="mt-14 border-y border-line" aria-label="İstatistikler / Statistics">
