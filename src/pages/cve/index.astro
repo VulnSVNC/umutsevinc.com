@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+import CveTable from '../../components/CveTable.astro';
+import cves from '../../data/cves.json';
+import { topScore } from '../../lib/cve';
+
+const sortedCves = [...cves].sort((a, b) => (topScore(b) ?? -1) - (topScore(a) ?? -1));
+const title = `CVE Kayıtları | Umut Sevinç (VulnSVNC)`;
+const description = `Umut Sevinç (VulnSVNC) tarafından yayımlanmış ${cves.length} CVE kaydı, kök neden analizleri ve PoC'ler.`;
+---
+<Base
+  title={title}
+  description={description}
+  path="/cve"
+  alternates={[{ hreflang: 'tr', path: '/cve' }, { hreflang: 'x-default', path: '/cve' }]}
+>
+  <nav class="text-xs text-faint mb-8" aria-label="breadcrumb">
+    <a class="hover:text-muted" href="/">Ana Sayfa</a> <span class="mx-1.5">/</span> <span class="font-mono text-muted">CVE Kayıtları</span>
+  </nav>
+
+  <div class="flex items-baseline justify-between gap-4 mb-2">
+    <h1 class="font-serif text-3xl text-ink">CVE Kayıtları</h1>
+    <p class="text-xs text-faint shrink-0" lang="en">Published CVE Records</p>
+  </div>
+  <p class="text-sm text-muted mb-7">Yayımlanmış {cves.length} CVE kaydı ve kök neden analizleri.</p>
+
+  <CveTable cves={sortedCves} />
+</Base>

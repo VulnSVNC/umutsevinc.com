@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
 import SeoSchema from '../components/SeoSchema.astro';
-import CveTable from '../components/CveTable.astro';
 import TerminalHero from '../components/TerminalHero.astro';
 import ToolGallery from '../components/ToolGallery.astro';
 import cves from '../data/cves.json';
@@ -12,7 +11,6 @@ import { topScore } from '../lib/cve';
 const scores = cves.map(topScore).filter((s): s is number => s != null);
 const maxScore = scores.length ? Math.max(...scores) : null;
 const languages = [...new Set(cves.flatMap((c) => c.language))];
-const sortedCves = [...cves].sort((a, b) => (topScore(b) ?? -1) - (topScore(a) ?? -1));
 const latestCve = [...cves].sort((a, b) => b.id.localeCompare(a.id))[0];
 const title = 'Umut Sevinç (VulnSVNC) | Türkiye Merkezli Zafiyet Araştırmacısı & CVE Kayıtları';
 ---
@@ -86,14 +84,11 @@ const title = 'Umut Sevinç (VulnSVNC) | Türkiye Merkezli Zafiyet Araştırmac�
 
   <ToolGallery />
 
-  <section id="register" class="mt-14 scroll-mt-20" aria-labelledby="cve-h2">
-    <div class="flex items-baseline justify-between gap-4 mb-2">
-      <h2 id="cve-h2" class="font-serif text-2xl text-ink">Seçilmiş Çalışmalar</h2>
-      <p class="text-xs text-faint shrink-0" lang="en">Selected Work</p>
-    </div>
-    <p class="text-sm text-muted mb-5">Yayımlanmış CVE kayıtları ve kök neden analizleri.</p>
-    <CveTable cves={sortedCves} />
-  </section>
+  <p class="mt-10 text-sm">
+    <a class="text-ink border-b border-line hover:border-brass transition-colors" href="/cve">
+      Tüm CVE kayıtlarını görüntüle ({cves.length}) →
+    </a>
+  </p>
 
   <section class="mt-14" aria-labelledby="pending-h2">
     <h2 id="pending-h2" class="font-serif text-2xl text-ink mb-5">Devam Eden Araştırmalar</h2>
