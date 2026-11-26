@@ -9,32 +9,35 @@ import { SITE } from '../../data/site';
   path="/en/about"
   alternates={[{ hreflang: 'tr', path: '/tr/hakkinda' }, { hreflang: 'en', path: '/en/about' }]}
 >
-  <h1 class="text-3xl font-bold text-zinc-50">Umut Sevinç (VulnSVNC) <span class="block text-emerald-400 text-xl mt-1">Turkey-based Vulnerability Researcher</span></h1>
+  <div class="max-w-2xl">
+    <h1 class="font-serif text-3xl text-ink">Umut Sevinç <span class="text-muted">(VulnSVNC)</span></h1>
+    <p class="mt-1 text-muted">Turkey-based vulnerability researcher</p>
 
-  <section class="mt-6 space-y-3 max-w-3xl">
-    <p>
-      Umut Sevinç (VulnSVNC, also written Umut SEVİNÇ) is a vulnerability researcher and offensive security analyst based in Türkiye.
-      Areas of work: {SITE.expertise.join(', ')}.
-    </p>
-    <p>Community and education roles: {SITE.communities.join(', ')}.</p>
-  </section>
+    <section class="mt-8 space-y-4 leading-relaxed">
+      <p>
+        Umut Sevinç (VulnSVNC, also written Umut SEVİNÇ) is a vulnerability researcher and offensive security analyst based in Türkiye.
+        Areas of work: {SITE.expertise.join(', ')}.
+      </p>
+      <p>Community and education roles: {SITE.communities.join(', ')}.</p>
+    </section>
 
-  <section class="mt-8 max-w-3xl" aria-labelledby="meta">
-    <h2 id="meta" class="text-xl font-bold text-zinc-50">Research approach: security of offensive tooling</h2>
-    <p class="mt-2">
-      Much of the research targets vulnerabilities in the offensive security tools that practitioners rely on. Because these tools
-      process untrusted network input, memory corruption and command injection bugs in them can put the operator at risk.
-    </p>
-  </section>
+    <section class="mt-10 pt-8 border-t border-line" aria-labelledby="meta">
+      <h2 id="meta" class="font-serif text-xl text-ink">Research approach: security of offensive tooling</h2>
+      <p class="mt-3 leading-relaxed">
+        Much of the research targets vulnerabilities in the offensive security tools that practitioners rely on. Because these tools
+        process untrusted network input, memory corruption and command injection bugs in them can put the operator at risk.
+      </p>
+    </section>
 
-  <section class="mt-8 max-w-3xl" aria-labelledby="disclosure">
-    <h2 id="disclosure" class="text-xl font-bold text-zinc-50">Responsible disclosure</h2>
-    <ul class="mt-2 list-disc pl-5 space-y-1">
-      <li>Issues are reported to the vendor or maintainer first.</li>
-      <li>CVE IDs are requested through coordinated disclosure (e.g. the VulnCheck CNA).</li>
-      <li>Details are published with the CVE record after a patch or a reasonable disclosure window.</li>
-    </ul>
-  </section>
+    <section class="mt-10 pt-8 border-t border-line" aria-labelledby="disclosure">
+      <h2 id="disclosure" class="font-serif text-xl text-ink">Responsible disclosure</h2>
+      <ul class="mt-3 space-y-2 leading-relaxed">
+        <li>Issues are reported to the vendor or maintainer first.</li>
+        <li>CVE IDs are requested through coordinated disclosure (e.g. the VulnCheck CNA).</li>
+        <li>Details are published with the CVE record after a patch or a reasonable disclosure window.</li>
+      </ul>
+    </section>
 
-  <p class="mt-8"><a class="text-emerald-400 hover:underline" href="/#cves">→ Published CVE records</a></p>
+    <p class="mt-10"><a class="text-sm border-b border-line hover:border-brass" href="/#register">Published CVE records</a></p>
+  </div>
 </Base>

@@ -8,36 +8,37 @@ import { SITE } from '../../data/site';
   path="/tr/hakkinda"
   alternates={[{ hreflang: 'tr', path: '/tr/hakkinda' }, { hreflang: 'en', path: '/en/about' }]}
 >
-  <h1 class="text-3xl font-bold text-zinc-50">Umut Sevinç (VulnSVNC) <span class="block text-emerald-400 text-xl mt-1">Türkiye Merkezli Zafiyet Araştırmacısı</span></h1>
+  <div class="max-w-2xl">
+    <h1 class="font-serif text-3xl text-ink">Umut Sevinç <span class="text-muted">(VulnSVNC)</span></h1>
+    <p class="mt-1 text-muted">Türkiye merkezli zafiyet araştırmacısı</p>
 
-  <section class="mt-6 space-y-3 max-w-3xl">
-    <p>
-      Umut Sevinç (VulnSVNC; alternatif yazım: Umut SEVİNÇ), Türkiye'de çalışan bir zafiyet araştırmacısı ve ofansif güvenlik analistidir.
-      Çalışma alanları: {SITE.expertise.join(', ')}.
-    </p>
-    <p>
-      Topluluk ve eğitim rolleri: {SITE.communities.join(', ')}.
-    </p>
-  </section>
+    <section class="mt-8 space-y-4 leading-relaxed">
+      <p>
+        Umut Sevinç (VulnSVNC; alternatif yazım: Umut SEVİNÇ), Türkiye'de çalışan bir zafiyet araştırmacısı ve ofansif güvenlik analistidir.
+        Çalışma alanları: {SITE.expertise.join(', ')}.
+      </p>
+      <p>Topluluk ve eğitim rolleri: {SITE.communities.join(', ')}.</p>
+    </section>
 
-  <section class="mt-8 max-w-3xl" aria-labelledby="meta">
-    <h2 id="meta" class="text-xl font-bold text-zinc-50">Araştırma Yaklaşımı: Ofansif Araçların Güvenliği</h2>
-    <p class="mt-2">
-      Birçok araştırma, savunma ve sızma testi ekiplerinin kullandığı ofansif güvenlik araçlarının kendisindeki zafiyetlere odaklanır
-      (meta-güvenlik). Bu araçlar güvenilmeyen ağ girdisini işlediği için, kendi kodlarındaki bellek bozulması ve komut enjeksiyonu
-      hataları kullanıcıyı da riske atabilir.
-    </p>
-  </section>
+    <section class="mt-10 pt-8 border-t border-line" aria-labelledby="meta">
+      <h2 id="meta" class="font-serif text-xl text-ink">Araştırma yaklaşımı: ofansif araçların güvenliği</h2>
+      <p class="mt-3 leading-relaxed">
+        Birçok araştırma, savunma ve sızma testi ekiplerinin kullandığı ofansif güvenlik araçlarının kendisindeki zafiyetlere odaklanır
+        (meta-güvenlik). Bu araçlar güvenilmeyen ağ girdisini işlediği için, kendi kodlarındaki bellek bozulması ve komut enjeksiyonu
+        hataları kullanıcıyı da riske atabilir.
+      </p>
+    </section>
 
-  <section class="mt-8 max-w-3xl" aria-labelledby="disclosure">
-    <h2 id="disclosure" class="text-xl font-bold text-zinc-50">Sorumlu İfşa (Responsible Disclosure)</h2>
-    <ul class="mt-2 list-disc pl-5 space-y-1">
-      <li>Zafiyetler önce ilgili yazılım sahibine / bakımcısına bildirilir.</li>
-      <li>CVE kimlikleri, koordineli ifşa süreçleri kapsamında (ör. VulnCheck CNA) talep edilir.</li>
-      <li>Ayrıntılar, yama veya makul bir ifşa süresi sonrasında CVE kaydıyla birlikte yayımlanır.</li>
-      <li>Süreçteki araştırmalar ana sayfadaki “Koordineli İfşa Sürecindeki Araştırmalar” bölümünde durum olarak gösterilir.</li>
-    </ul>
-  </section>
+    <section class="mt-10 pt-8 border-t border-line" aria-labelledby="disclosure">
+      <h2 id="disclosure" class="font-serif text-xl text-ink">Sorumlu ifşa</h2>
+      <ul class="mt-3 space-y-2 leading-relaxed">
+        <li>Zafiyetler önce ilgili yazılım sahibine / bakımcısına bildirilir.</li>
+        <li>CVE kimlikleri, koordineli ifşa süreçleri kapsamında (ör. VulnCheck CNA) talep edilir.</li>
+        <li>Ayrıntılar, yama veya makul bir ifşa süresi sonrasında CVE kaydıyla birlikte yayımlanır.</li>
+        <li>Süreçteki araştırmalar ana sayfadaki "Koordineli İfşa Sürecindeki Araştırmalar" bölümünde durum olarak gösterilir.</li>
+      </ul>
+    </section>
 
-  <p class="mt-8"><a class="text-emerald-400 hover:underline" href="/#cves">→ Yayımlanmış CVE Kayıtları</a></p>
+    <p class="mt-10"><a class="text-sm border-b border-line hover:border-brass" href="/#register">Yayımlanmış CVE kayıtları</a></p>
+  </div>
 </Base>

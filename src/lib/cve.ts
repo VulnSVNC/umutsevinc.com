@@ -5,18 +5,18 @@ export function topScore(c: any): number | null {
   return s > 0 ? s : null;
 }
 
-export function severity(score: number | null): { label: string; cls: string } {
-  if (score == null) return { label: 'N/A', cls: 'text-zinc-500 border-zinc-700' };
-  if (score >= 9) return { label: 'Critical', cls: 'text-red-400 border-red-500/40' };
-  if (score >= 7) return { label: 'High', cls: 'text-orange-400 border-orange-500/40' };
-  if (score >= 4) return { label: 'Medium', cls: 'text-yellow-400 border-yellow-500/40' };
-  return { label: 'Low', cls: 'text-sky-400 border-sky-500/40' };
+export function severity(score: number | null): { label: string; dot: string; text: string } {
+  if (score == null) return { label: 'N/A', dot: 'bg-faint', text: 'text-faint' };
+  if (score >= 9) return { label: 'Critical', dot: 'bg-critical', text: 'text-critical' };
+  if (score >= 7) return { label: 'High', dot: 'bg-high', text: 'text-high' };
+  if (score >= 4) return { label: 'Medium', dot: 'bg-medium', text: 'text-medium' };
+  return { label: 'Low', dot: 'bg-low', text: 'text-low' };
 }
 
-export const STATUS: Record<string, { tr: string; en: string; cls: string }> = {
-  patched: { tr: 'Yamalandı', en: 'Patched', cls: 'text-emerald-400 border-emerald-500/40' },
-  unpatched: { tr: 'Yaması bulunmuyor', en: 'No patch available', cls: 'text-red-400 border-red-500/40' },
-  unknown: { tr: 'Belirtilmedi', en: 'Not stated', cls: 'text-zinc-400 border-zinc-700' },
+export const STATUS: Record<string, { tr: string; en: string; text: string }> = {
+  patched: { tr: 'Yamalandı', en: 'Patched', text: 'text-patched' },
+  unpatched: { tr: 'Yaması bulunmuyor', en: 'No patch available', text: 'text-critical' },
+  unknown: { tr: 'Belirtilmedi', en: 'Not stated', text: 'text-faint' },
 };
 
 export const codeLang = (l: string) =>

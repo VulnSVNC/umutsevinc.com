@@ -4,12 +4,16 @@ import Base from '../../layouts/Base.astro';
 import cves from '../../data/cves.json';
 import { SITE } from '../../data/site';
 import { slugOf, topScore, severity, STATUS, codeLang } from '../../lib/cve';
+import { readWriteup } from '../../lib/writeups';
 
 export function getStaticPaths() {
-  return cves.map((c) => ({ params: { id: slugOf(c.id) }, props: { cve: c } }));
+  return cves.map((c) => ({
+    params: { id: slugOf(c.id) },
+    props: { cve: c, writeupHtml: readWriteup(c.id) },
+  }));
 }
 
-const { cve } = Astro.props as { cve: any };
+const { cve, writeupHtml } = Astro.props as { cve: any; writeupHtml: string | null };
 const base = String(Astro.site).replace(/\/$/, '');
 const path = `/cve/${slugOf(cve.id)}`;
 const url = base + path;
@@ -19,12 +23,14 @@ const st = STATUS[cve.status] ?? STATUS.unknown;
 const title = `${cve.id}: ${cve.title} | ${SITE.name}`;
 const description = `${cve.id} — ${cve.vulnType}. Etkilenen: ${cve.product}${cve.affected ? ' (' + cve.affected + ')' : ''}. Araştırmacı: Umut Sevinç (VulnSVNC).`;
 
-const refs: { label: string; href: string }[] = [
+const refsRaw: { label: string; href: string }[] = [
   { label: 'NVD', href: `https://nvd.nist.gov/vuln/detail/${cve.id}` },
   { label: 'CVE.org', href: `https://www.cve.org/CVERecord?id=${cve.id}` },
-  ...(cve.repo ? [{ label: 'GitHub Repo', href: cve.repo }] : []),
+  ...(cve.repo ? [{ label: 'GitHub', href: cve.repo }] : []),
   ...(cve.references ?? []).map((r: any) => ({ label: r.label ?? r.url, href: r.url ?? r.href })),
 ];
+const seenHrefs = new Set<string>();
+const refs = refsRaw.filter((r) => (seenHrefs.has(r.href) ? false : (seenHrefs.add(r.href), true)));
 
 const techArticle = {
   '@context': 'https://schema.org',
@@ -50,6 +56,13 @@ const sourceCode = cve.repo
     }
   : null;
 const ld = (o: unknown) => JSON.stringify(o).replace(/</g, '\\u003c');
+
+const facts: [string, string][] = [
+  ['Ürün', cve.product],
+  ['Etkilenen sürüm', cve.affected ?? '—'],
+  ['CWE', cve.cwe.length ? cve.cwe.join(', ') : '—'],
+  ['Dil', cve.language.join(' / ')],
+];
 ---
 <Base title={title} description={description} path={path} ogType="article">
   <Fragment slot="head">
@@ -57,94 +70,98 @@ const ld = (o: unknown) => JSON.stringify(o).replace(/</g, '\\u003c');
     {sourceCode && <script type="application/ld+json" set:html={ld(sourceCode)} />}
   </Fragment>
 
-  <nav class="text-xs text-zinc-500 mb-4" aria-label="breadcrumb">
-    <a class="hover:text-emerald-400" href="/">Ana Sayfa</a> / <a class="hover:text-emerald-400" href="/#cves">CVE</a> / <span class="font-mono">{cve.id}</span>
+  <nav class="text-xs text-faint mb-8" aria-label="breadcrumb">
+    <a class="hover:text-muted" href="/">Ana Sayfa</a> <span class="mx-1.5">/</span> <a class="hover:text-muted" href="/#register">CVE Kayıtları</a> <span class="mx-1.5">/</span> <span class="font-mono text-muted">{cve.id}</span>
   </nav>
 
-  <article>
-    <header>
-      <p class="font-mono text-emerald-400 text-sm">{cve.id}</p>
-      <h1 class="text-2xl sm:text-3xl font-bold text-zinc-50 mt-1">{cve.title}</h1>
-      <p class="mt-2 text-zinc-400">{cve.vulnType}</p>
-      <div class="mt-4 flex flex-wrap gap-2 text-xs font-mono">
-        {score != null && <span class={`border rounded px-2 py-1 ${sev.cls}`}>CVSS {score.toFixed(1)} · {sev.label}</span>}
-        {cve.cwe.map((w: string) => <span class="border border-zinc-700 rounded px-2 py-1">{w}</span>)}
-        <span class={`border rounded px-2 py-1 ${st.cls}`}>{st.tr} / {st.en}</span>
-        {cve.language.map((l: string) => <span class="border border-zinc-700 rounded px-2 py-1">{l}</span>)}
-      </div>
+  <article class="max-w-3xl">
+    <header class="border-b border-line pb-6">
+      <p class="font-mono text-sm text-brass">{cve.id}</p>
+      <h1 class="font-serif text-3xl text-ink mt-2 leading-tight">{cve.title}</h1>
+      <p class="mt-3 text-muted leading-relaxed">{cve.vulnType}</p>
     </header>
 
-    <section class="mt-8 grid sm:grid-cols-2 gap-4" aria-label="Özet">
-      <div class="border border-zinc-800 rounded-lg p-4 bg-zinc-900/50">
-        <h2 class="text-sm font-semibold text-zinc-100 mb-2">Etkilenen Sürümler <span class="text-zinc-500 font-normal">/ Affected Versions</span></h2>
-        <p class="font-mono text-sm">{cve.product}{cve.affected ? ` — ${cve.affected}` : ''}</p>
-      </div>
-      <div class="border border-zinc-800 rounded-lg p-4 bg-zinc-900/50">
-        <h2 class="text-sm font-semibold text-zinc-100 mb-2">Çözüm / Yama Durumu <span class="text-zinc-500 font-normal">/ Remediation</span></h2>
-        <p class="text-sm">
-          {st.tr} / {st.en}{cve.fixedIn ? <span class="font-mono"> — {cve.fixedIn}</span> : null}
-        </p>
-      </div>
-      {cve.cvss && (
-        <div class="border border-zinc-800 rounded-lg p-4 bg-zinc-900/50 sm:col-span-2">
-          <h2 class="text-sm font-semibold text-zinc-100 mb-2">CVSS</h2>
-          <p class="font-mono text-sm">
-            {cve.cvss.v4 != null && <span>CVSS 4.0: {cve.cvss.v4.toFixed(1)}</span>}
-            {cve.cvss.v4 != null && cve.cvss.v31 != null && <span class="text-zinc-600"> · </span>}
-            {cve.cvss.v31 != null && <span>CVSS 3.1: {cve.cvss.v31.toFixed(1)}</span>}
-          </p>
+    <dl class="grid grid-cols-2 sm:grid-cols-4 gap-x-4 gap-y-5 mt-6 pb-6 border-b border-line">
+      {facts.map(([k, v]) => (
+        <div>
+          <dt class="text-xs text-faint">{k}</dt>
+          <dd class="mt-1 text-sm text-ink">{v}</dd>
         </div>
-      )}
-    </section>
+      ))}
+      <div>
+        <dt class="text-xs text-faint">CVSS</dt>
+        <dd class="mt-1 text-sm font-mono">
+          {score != null ? (
+            <span class={sev.text}>{score.toFixed(1)} · {sev.label}</span>
+          ) : <span class="text-faint">—</span>}
+        </dd>
+      </div>
+      <div>
+        <dt class="text-xs text-faint">Durum</dt>
+        <dd class={`mt-1 text-sm ${st.text}`}>{st.tr}{cve.fixedIn ? <span class="text-ink font-mono text-xs"> ({cve.fixedIn})</span> : null}</dd>
+      </div>
+    </dl>
 
-    <section class="mt-8" aria-labelledby="rc">
-      <h2 id="rc" class="text-xl font-bold text-zinc-50">Kök Neden Analizi <span class="text-zinc-500 text-base font-normal">/ Root Cause Analysis</span></h2>
-      {cve.rootCause ? (
-        <>
-          <p class="mt-2" lang="tr">{cve.rootCause.tr}</p>
-          <p class="mt-2 text-zinc-400" lang="en">{cve.rootCause.en}</p>
-        </>
-      ) : (
-        <p class="mt-2 text-zinc-500">Ayrıntılı analiz henüz eklenmedi. Resmî kayıtlar için aşağıdaki referanslara bakın.</p>
-      )}
-    </section>
+    {writeupHtml ? (
+      <section class="mt-8" aria-labelledby="writeup">
+        <h2 id="writeup" class="font-serif text-xl text-ink">Teknik Rapor</h2>
+        <div class="writeup mt-4" set:html={writeupHtml} />
+      </section>
+    ) : (
+      <>
+        <section class="mt-8" aria-labelledby="rc">
+          <h2 id="rc" class="font-serif text-xl text-ink">Kök neden analizi</h2>
+          {cve.rootCause ? (
+            <>
+              <p class="mt-3 leading-relaxed" lang="tr">{cve.rootCause.tr}</p>
+              <p class="mt-3 leading-relaxed text-muted" lang="en">{cve.rootCause.en}</p>
+            </>
+          ) : (
+            <p class="mt-3 text-muted">Ayrıntılı analiz henüz eklenmedi. Resmî kayıtlar için aşağıdaki referanslara bakın.</p>
+          )}
+        </section>
 
-    <section class="mt-8" aria-labelledby="impact">
-      <h2 id="impact" class="text-xl font-bold text-zinc-50">Etki Senaryosu <span class="text-zinc-500 text-base font-normal">/ Impact</span></h2>
-      {cve.impact ? (
-        <>
-          <p class="mt-2" lang="tr">{cve.impact.tr}</p>
-          <p class="mt-2 text-zinc-400" lang="en">{cve.impact.en}</p>
-        </>
-      ) : (
-        <p class="mt-2 text-zinc-500">Etki ayrıntıları resmî CVE kaydında yer alır.</p>
-      )}
-    </section>
+        <section class="mt-8" aria-labelledby="impact">
+          <h2 id="impact" class="font-serif text-xl text-ink">Etki senaryosu</h2>
+          {cve.impact ? (
+            <>
+              <p class="mt-3 leading-relaxed" lang="tr">{cve.impact.tr}</p>
+              <p class="mt-3 leading-relaxed text-muted" lang="en">{cve.impact.en}</p>
+            </>
+          ) : (
+            <p class="mt-3 text-muted">Etki ayrıntıları resmî CVE kaydında yer alır.</p>
+          )}
+        </section>
 
-    <section class="mt-8" aria-labelledby="poc">
-      <h2 id="poc" class="text-xl font-bold text-zinc-50">Proof of Concept</h2>
-      {cve.poc?.code ? (
-        <div class="mt-3 relative">
-          <button type="button" id="copy-poc" class="absolute right-2 top-2 z-[1] text-xs border border-zinc-700 bg-zinc-900 hover:border-emerald-500 rounded px-2 py-1">Kopyala</button>
-          <div id="poc-code"><Code code={cve.poc.code} lang={cve.poc.lang ?? codeLang(cve.language[0])} theme="github-dark" /></div>
-        </div>
-      ) : (
-        <p class="mt-2 text-zinc-500">
-          PoC kodu bu sayfada yayımlanmadı.
-          {cve.repo ? <> Varsa ayrıntılar için <a class="text-emerald-400 hover:underline" href={cve.repo} rel="noopener">GitHub deposuna</a> bakın.</> : null}
-        </p>
-      )}
-    </section>
+        <section class="mt-8" aria-labelledby="poc">
+          <h2 id="poc" class="font-serif text-xl text-ink">Proof of Concept</h2>
+          {cve.poc?.code ? (
+            <div class="mt-3 border border-line rounded">
+              <div class="flex items-center justify-between px-3.5 py-2 border-b border-line">
+                <span class="font-mono text-xs text-faint">{cve.poc.lang ?? codeLang(cve.language[0])}</span>
+                <button type="button" id="copy-poc" class="text-xs text-muted hover:text-ink">Kopyala</button>
+              </div>
+              <div id="poc-code" class="[&_pre]:rounded-none [&_pre]:border-none [&_pre]:m-0"><Code code={cve.poc.code} lang={cve.poc.lang ?? codeLang(cve.language[0])} theme="github-dark" /></div>
+            </div>
+          ) : (
+            <p class="mt-3 text-muted">
+              PoC kodu bu sayfada yayımlanmadı.
+              {cve.repo ? <> Varsa ayrıntılar için <a class="border-b border-line hover:border-brass" href={cve.repo} rel="noopener">GitHub deposuna</a> bakın.</> : null}
+            </p>
+          )}
+        </section>
+      </>
+    )}
 
     <section class="mt-8" aria-labelledby="refs">
-      <h2 id="refs" class="text-xl font-bold text-zinc-50">Resmî Referanslar <span class="text-zinc-500 text-base font-normal">/ References</span></h2>
-      <ul class="mt-3 space-y-1 text-sm">
-        {refs.map((r) => <li><a class="text-emerald-400 hover:underline break-all" href={r.href} rel="noopener">{r.label}</a></li>)}
+      <h2 id="refs" class="font-serif text-xl text-ink">Resmî referanslar</h2>
+      <ul class="mt-3 space-y-1.5 text-sm">
+        {refs.map((r) => <li><a class="text-muted hover:text-ink border-b border-line hover:border-brass break-all" href={r.href} rel="noopener">{r.label}</a></li>)}
       </ul>
     </section>
 
-    <p class="mt-10 text-sm text-zinc-500">
-      Araştırmacı: <a class="text-emerald-400 hover:underline" href="/">Umut Sevinç (VulnSVNC)</a> · Türkiye merkezli zafiyet araştırmacısı.
+    <p class="mt-10 pt-6 border-t border-line text-sm text-faint">
+      Araştırmacı: <a class="text-muted hover:text-ink border-b border-line hover:border-brass" href="/">Umut Sevinç (VulnSVNC)</a>
     </p>
   </article>
 
@@ -152,7 +169,7 @@ const ld = (o: unknown) => JSON.stringify(o).replace(/</g, '\\u003c');
     const btn = document.getElementById('copy-poc');
     btn?.addEventListener('click', async () => {
       const text = document.querySelector('#poc-code pre')?.textContent ?? '';
-      try { await navigator.clipboard.writeText(text); btn.textContent = 'Kopyalandı ✓'; }
+      try { await navigator.clipboard.writeText(text); btn.textContent = 'Kopyalandı'; }
       catch { btn.textContent = 'Kopyalanamadı'; }
       setTimeout(() => (btn.textContent = 'Kopyala'), 1800);
     });
