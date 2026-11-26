@@ -42,12 +42,25 @@ body {
   background-image:
     radial-gradient(ellipse 1200px 500px at 50% -10%, color-mix(in srgb, var(--color-brass) 7%, transparent), transparent),
     linear-gradient(color-mix(in srgb, var(--color-line) 45%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--color-line) 45%, transparent) 1px, transparent 1px),
-    url('/images/stamp-vs-bg.webp');
-  background-position: 0 0, 0 0, 0 0, right -30px top -20px;
-  background-repeat: no-repeat, repeat, repeat, no-repeat;
-  background-size: auto, 42px 42px, 42px 42px, 620px auto;
+    linear-gradient(90deg, color-mix(in srgb, var(--color-line) 45%, transparent) 1px, transparent 1px);
+  background-position: 0 0, 0 0, 0 0;
+  background-repeat: no-repeat, repeat, repeat;
+  background-size: auto, 42px 42px, 42px 42px;
   background-attachment: fixed;
+}
+
+/* Corner watermark stamp: desktop/tablet only, hidden on mobile */
+@media (min-width: 640px) {
+  body {
+    background-image:
+      radial-gradient(ellipse 1200px 500px at 50% -10%, color-mix(in srgb, var(--color-brass) 7%, transparent), transparent),
+      linear-gradient(color-mix(in srgb, var(--color-line) 45%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in srgb, var(--color-line) 45%, transparent) 1px, transparent 1px),
+      url('/images/stamp-vs-bg.webp');
+    background-position: 0 0, 0 0, 0 0, right -30px top -20px;
+    background-repeat: no-repeat, repeat, repeat, no-repeat;
+    background-size: auto, 42px 42px, 42px 42px, 620px auto;
+  }
 }
 
 ::selection { background: color-mix(in srgb, var(--color-brass) 28%, transparent); }
