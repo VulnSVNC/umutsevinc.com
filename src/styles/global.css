@@ -42,8 +42,11 @@ body {
   background-image:
     radial-gradient(ellipse 1200px 500px at 50% -10%, color-mix(in srgb, var(--color-brass) 7%, transparent), transparent),
     linear-gradient(color-mix(in srgb, var(--color-line) 45%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--color-line) 45%, transparent) 1px, transparent 1px);
-  background-size: auto, 42px 42px, 42px 42px;
+    linear-gradient(90deg, color-mix(in srgb, var(--color-line) 45%, transparent) 1px, transparent 1px),
+    url('/images/stamp-vs-bg.webp');
+  background-position: 0 0, 0 0, 0 0, right -30px top -20px;
+  background-repeat: no-repeat, repeat, repeat, no-repeat;
+  background-size: auto, 42px 42px, 42px 42px, 620px auto;
   background-attachment: fixed;
 }
 
