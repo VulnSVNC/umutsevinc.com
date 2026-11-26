@@ -17,6 +17,14 @@
   --color-low: #6fa3d6;
   --color-patched: #5cb98a;
 
+  /* Per-category accent tones for tool illustrations (distinct from severity) */
+  --color-teal: #5fb8ae;
+  --color-rose: #c97b73;
+  --color-indigo: #8490d4;
+  --color-copper: #c98b4a;
+  --color-moss: #9aa35c;
+  --color-violet: #a685c9;
+
   --font-serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
   --font-sans: "Inter", -apple-system, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
