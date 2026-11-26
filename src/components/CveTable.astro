@@ -13,8 +13,9 @@ const langs = [...new Set(cves.flatMap((c) => c.language))].sort();
   </select>
 </div>
 
-<div class="overflow-x-auto -mx-5 px-5 sm:mx-0 sm:px-0">
-  <table class="w-full min-w-[720px] sm:min-w-0 text-sm text-left border-collapse" id="cve-table">
+<!-- Masaüstü / tablet: tam tablo (md ve üzeri) -->
+<div class="hidden md:block overflow-x-auto">
+  <table class="w-full text-sm text-left border-collapse" id="cve-table">
     <thead class="text-muted text-xs">
       <tr class="border-b border-line">
         <th class="py-2 pr-3 font-normal">CVE</th>
@@ -53,6 +54,36 @@ const langs = [...new Set(cves.flatMap((c) => c.language))].sort();
     </tbody>
   </table>
 </div>
+
+<!-- Mobil: dar ekranda yatay scroll yerine okunabilir liste -->
+<ul class="md:hidden divide-y divide-line-soft">
+  {cves.map((c) => {
+    const s = topScore(c);
+    const sev = severity(s);
+    return (
+      <li data-row data-lang={c.language.join(' ').toLowerCase()}
+          data-text={`${c.id} ${c.product} ${c.vulnType} ${c.cwe.join(' ')} ${c.language.join(' ')}`.toLowerCase()}>
+        <a href={`/cve/${slugOf(c.id)}`} class="block py-4">
+          <div class="flex items-center justify-between gap-3">
+            <span class="font-mono text-xs text-brass">{c.id}</span>
+            {s != null ? (
+              <span class="inline-flex items-center gap-1.5 font-mono text-xs shrink-0">
+                <span class={`inline-block w-1.5 h-1.5 rounded-full ${sev.dot}`}></span>
+                <span class={sev.text}>{s.toFixed(1)}</span>
+              </span>
+            ) : <span class="text-faint text-xs shrink-0">—</span>}
+          </div>
+          <p class="mt-1.5 text-ink font-medium">{c.product}</p>
+          <p class="mt-0.5 text-sm text-muted leading-snug line-clamp-2">{c.vulnType}</p>
+          <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-faint">
+            <span class="font-mono">{c.cwe.length ? c.cwe.join(', ') : '—'}</span>
+            <span>{c.language.join(' / ')}</span>
+          </div>
+        </a>
+      </li>
+    );
+  })}
+</ul>
 <p id="cve-empty" class="hidden text-sm text-faint mt-4">Eşleşen kayıt yok.</p>
 
 <script>

@@ -1,28 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #0b0e14;
-  --color-surface: #12161f;
-  --color-surface-2: #171c27;
-  --color-line: #262c3a;
-  --color-line-soft: #1c212c;
-  --color-ink: #e8eaf0;
-  --color-muted: #8d93a6;
-  --color-faint: #5b6174;
-  --color-brass: #c9a35f;
-  --color-brass-dim: #8a7140;
-  --color-critical: #e2605c;
-  --color-high: #e2954a;
-  --color-medium: #d9b54a;
-  --color-low: #6f9bd1;
-  --color-patched: #5fae82;
+  --color-bg: #f7f5ef;
+  --color-surface: #ffffff;
+  --color-surface-2: #efebe0;
+  --color-line: #ddd6c4;
+  --color-line-soft: #e8e3d5;
+  --color-ink: #211e18;
+  --color-muted: #5c564a;
+  --color-faint: #8f887a;
+  --color-brass: #8a5a1f;
+  --color-brass-dim: #c3a877;
+  --color-critical: #a9342b;
+  --color-high: #9c5812;
+  --color-medium: #8c6f12;
+  --color-low: #2a5f87;
+  --color-patched: #2d7850;
 
   --font-serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
   --font-sans: "Inter", -apple-system, "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
 }
 
-:root { color-scheme: dark; }
+:root { color-scheme: light; }
 
 html {
   scroll-behavior: smooth;
@@ -32,10 +32,10 @@ body {
   font-family: var(--font-sans);
   background: var(--color-bg);
   background-image:
-    radial-gradient(ellipse 1200px 500px at 50% -10%, color-mix(in srgb, var(--color-brass) 7%, transparent), transparent);
+    radial-gradient(ellipse 1200px 500px at 50% -10%, color-mix(in srgb, var(--color-brass) 5%, transparent), transparent);
 }
 
-::selection { background: color-mix(in srgb, var(--color-brass) 30%, transparent); }
+::selection { background: color-mix(in srgb, var(--color-brass) 22%, transparent); }
 
 .font-feature-tab {
   font-variant-numeric: tabular-nums;
@@ -52,7 +52,7 @@ pre.astro-code {
 
 ::-webkit-scrollbar { height: 8px; width: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--color-line); border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: var(--color-faint); border-radius: 4px; opacity: 0.5; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -140,9 +140,11 @@ pre.astro-code {
   font-family: var(--font-mono);
   font-size: 0.85em;
   color: var(--color-brass);
-  background: var(--color-surface);
+  background: var(--color-surface-2);
   padding: 0.1em 0.35em;
   border-radius: 0.2rem;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .writeup pre {
@@ -153,13 +155,16 @@ pre.astro-code {
   font-size: 0.8rem;
   line-height: 1.6;
   border: 1px solid var(--color-line);
-  background: var(--color-surface);
+  background: var(--color-ink);
 }
 .writeup pre code {
   background: none;
   padding: 0;
-  color: var(--color-ink);
+  color: var(--color-bg);
   font-size: 1em;
+  overflow-wrap: normal;
+  word-break: normal;
+  white-space: pre;
 }
 
 .writeup table {
@@ -173,6 +178,7 @@ pre.astro-code {
   border-bottom: 1px solid var(--color-line);
   text-align: left;
   vertical-align: top;
+  overflow-wrap: break-word;
 }
 .writeup th {
   color: var(--color-faint);
