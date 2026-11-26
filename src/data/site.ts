@@ -9,7 +9,7 @@ export const SITE = {
   country: 'Turkey',
   countryCode: 'TR',
   github: 'https://github.com/VulnSVNC',
-  linkedin: 'https://linkedin.com',
+  linkedin: 'https://www.linkedin.com/in/umut-sevin%C3%A7/',
   expertise: [
     'Vulnerability Research',
     'CVE Analysis',
