@@ -50,6 +50,7 @@ const items = (cvesData as any[])
             decoding="async"
             class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
           />
+          <div class="stamp-veil absolute inset-0 bg-black/55" aria-hidden="true"></div>
           <img
             src="/images/stamp-vs.webp"
             alt=""
@@ -80,6 +81,13 @@ const items = (cvesData as any[])
 </section>
 
 <style>
+  .stamp-veil {
+    opacity: 0;
+    transition: opacity 0.2s ease-out;
+  }
+  .group:hover .stamp-veil {
+    opacity: 1;
+  }
   .stamp-mark {
     opacity: 0;
     transform: translate(-50%, -50%) rotate(-11deg) scale(2.4);
@@ -88,14 +96,18 @@ const items = (cvesData as any[])
     will-change: transform, opacity;
   }
   .group:hover .stamp-mark {
-    opacity: 0.88;
-    transition: opacity 0.1s ease-out, transform 0.32s cubic-bezier(0.18, 1.6, 0.4, 1);
+    opacity: 0.92;
+    transition: opacity 0.1s ease-out 0.05s, transform 0.32s cubic-bezier(0.18, 1.6, 0.4, 1) 0.05s;
     transform: translate(-50%, -50%) rotate(-11deg) scale(1);
   }
   @media (prefers-reduced-motion: reduce) {
     .stamp-mark,
     .group:hover .stamp-mark {
       transform: translate(-50%, -50%) rotate(-11deg) scale(1);
+      transition: opacity 0.15s ease-out;
+    }
+    .stamp-veil,
+    .group:hover .stamp-veil {
       transition: opacity 0.15s ease-out;
     }
   }
