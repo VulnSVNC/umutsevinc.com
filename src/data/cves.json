@@ -1,128 +1,5 @@
 [
   {
-    "id": "CVE-2026-125399",
-    "product": "Fluxion",
-    "title": "Fluxion Unauthenticated OS Command Injection via Crafted SSID",
-    "vulnType": "Zero-Click, Unauthenticated OS Command Injection via eval() on Attacker-Controlled ESSID",
-    "cwe": [
-      "CWE-78"
-    ],
-    "cvss": {
-      "v4": 8.6,
-      "v31": 8.0
-    },
-    "language": [
-      "Shell",
-      "Bash"
-    ],
-    "status": "patched",
-    "affected": "< 6.39",
-    "fixedIn": "6.39",
-    "repo": "https://github.com/VulnSVNC/CVE-2026-125399",
-    "rootCause": {
-      "en": "The target scanner in fluxion.sh decodes access point ESSIDs with eval after escaping only single quotes, so shell metacharacters in an attacker-controlled SSID are executed.",
-      "tr": "fluxion.sh içindeki hedef tarayıcı, erişim noktası ESSID değerlerini yalnızca tek tırnakları kaçışlayarak eval ile çözer; saldırgan kontrolündeki SSID içindeki kabuk metakarakterleri çalıştırılır."
-    },
-    "impact": {
-      "en": "An attacker within Wi-Fi range can broadcast a crafted SSID and run commands as root when an operator scans or selects it.",
-      "tr": "Wi-Fi menzilindeki bir saldırgan hazırlanmış SSID yayınlayarak, operatör taradığında veya seçtiğinde root olarak komut çalıştırabilir."
-    },
-    "poc": null,
-    "references": [
-      {
-        "label": "VulnCheck Advisory",
-        "url": "https://www.vulncheck.com/advisories/fluxion-before-6.39-os-command-injection-via-crafted-ssid"
-      },
-      {
-        "label": "Patch commit",
-        "url": "https://github.com/FluxionNetwork/fluxion/commit/be22b0c42f21144a712b62fc072a438a012eb5d7"
-      },
-      {
-        "label": "Fluxion v6.39 release",
-        "url": "https://github.com/FluxionNetwork/fluxion/releases/tag/v6.39"
-      }
-    ]
-  },
-  {
-    "id": "CVE-2026-134753",
-    "product": "dsniff",
-    "title": "dsniff decode_sniffer() Integer Underflow Out-of-Bounds Write",
-    "vulnType": "decode_sniffer() Integer Underflow leading to Out-of-Bounds Write (unauthenticated UDP port 2001 packet)",
-    "cwe": [
-      "CWE-191",
-      "CWE-787"
-    ],
-    "cvss": {
-      "v4": 8.3,
-      "v31": 7.0
-    },
-    "language": [
-      "C"
-    ],
-    "status": "unpatched",
-    "affected": "<= 2.5a2",
-    "fixedIn": null,
-    "repo": "https://github.com/VulnSVNC/CVE-2026-134753",
-    "rootCause": {
-      "en": "An integer underflow in decode_sniffer() (decode_sniffer.c) lets a crafted UDP datagram write past the global obuf buffer.",
-      "tr": "decode_sniffer() (decode_sniffer.c) içindeki tamsayı alt taşması, hazırlanmış bir UDP paketinin global obuf tamponunun ötesine yazmasına izin verir."
-    },
-    "impact": {
-      "en": "Unauthenticated remote attackers can corrupt memory and crash dsniff with a single UDP packet to port 2001. No patch is available.",
-      "tr": "Kimlik doğrulaması olmayan uzak saldırganlar UDP 2001 portuna tek paketle belleği bozup dsniff'i çökertebilir. Yama bulunmuyor."
-    },
-    "poc": null,
-    "references": [
-      {
-        "label": "VulnCheck Advisory",
-        "url": "https://www.vulncheck.com/advisories/dsniff-through-2-5a2-integer-underflow-out-of-bounds-write-via-decode-sniffer"
-      },
-      {
-        "label": "Upstream issue #7",
-        "url": "https://github.com/hackerschoice/dsniff/issues/7"
-      },
-      {
-        "label": "decode_sniffer.c (v2.5a2)",
-        "url": "https://github.com/hackerschoice/dsniff/blob/v2.5a2/decode_sniffer.c#L46"
-      }
-    ]
-  },
-  {
-    "id": "CVE-2026-115904",
-    "product": "Topluyo App",
-    "title": "Topluyo Desktop for Linux OS Command Injection in openExternalLinks()",
-    "vulnType": "OS Command Injection in openExternalLinks() (utils.js)",
-    "cwe": [
-      "CWE-78"
-    ],
-    "cvss": {
-      "v31": 9.6
-    },
-    "language": [
-      "JavaScript",
-      "Electron"
-    ],
-    "status": "patched",
-    "affected": "Desktop for Linux < 2026.9.2410",
-    "fixedIn": "2026.9.2410",
-    "repo": "https://github.com/VulnSVNC/CVE-2026-115904",
-    "rootCause": {
-      "en": "User-controlled URLs are processed unsafely in openExternalLinks() in utils.js, resulting in OS command injection.",
-      "tr": "utils.js içindeki openExternalLinks() fonksiyonunda kullanıcı kontrollü URL'ler güvensiz işlenir ve işletim sistemi komut enjeksiyonuna yol açar."
-    },
-    "impact": {
-      "en": "An attacker who controls a URL can run arbitrary OS commands with the privileges of the user who opens the link.",
-      "tr": "URL'yi kontrol eden saldırgan, bağlantıyı açan kullanıcının yetkileriyle rastgele işletim sistemi komutu çalıştırabilir."
-    },
-    "poc": null,
-    "references": [
-      {
-        "label": "Vendor advisory GHSA-vrrv-3f46-c3x7",
-        "url": "https://github.com/topluyo/App/security/advisories/GHSA-vrrv-3f46-c3x7"
-      }
-    ]
-  },
-  {
     "id": "CVE-2026-136131",
     "product": "hping3",
     "title": "hping3 Out-of-Bounds Write in display_ipopt() via IP Record Route Option",
@@ -131,7 +8,7 @@
       "CWE-787"
     ],
     "cvss": {
-      "v4": 6.0,
+      "v4": 6,
       "v31": 5.9
     },
     "language": [
@@ -162,41 +39,85 @@
     ]
   },
   {
-    "id": "CVE-2026-133274",
-    "product": "THC-Hydra",
-    "title": "THC-Hydra Stack Buffer Overflow via hydra-http-form.c Cookie Handling",
-    "vulnType": "Stack Buffer Overflow in analyze_server_response() via crafted Set-Cookie headers (DoS)",
+    "id": "CVE-2026-134758",
+    "product": "Wfuzz",
+    "title": "Wfuzz Stored XSS via HTML Report Printer",
+    "vulnType": "Stored XSS via HTML Report Printer (Unescaped URL/Redirect Injection)",
     "cwe": [
-      "CWE-121"
+      "CWE-79"
     ],
     "cvss": {
-      "v4": 7.1
+      "v4": 2.3,
+      "v31": 4.7
     },
     "language": [
-      "C",
       "Python"
     ],
     "status": "unknown",
-    "affected": "<= 9.7",
+    "affected": "<= 3.1.1",
     "fixedIn": null,
-    "repo": "https://github.com/VulnSVNC/CVE-2026-133274",
+    "repo": "https://github.com/VulnSVNC/CVE-2026-134758",
     "rootCause": {
-      "en": "In analyze_server_response() of hydra-http-form.c, a Set-Cookie header with an extra leading space followed by a repeated cookie name yields a negative strncpy length and overflows tmpcookie.",
-      "tr": "hydra-http-form.c içindeki analyze_server_response() fonksiyonunda, fazladan baştaki boşluk ve tekrarlanan çerez adı içeren Set-Cookie başlığı negatif strncpy uzunluğu üretir ve tmpcookie tamponunu taşırır."
+      "en": "Links returned by a target server are written unescaped into HTML reports by the HTML printer (links script), resulting in stored XSS.",
+      "tr": "Hedef sunucunun döndürdüğü bağlantılar, HTML yazıcısı (links betiği) tarafından kaçışlanmadan HTML raporuna yazılır ve kalıcı XSS oluşur."
     },
     "impact": {
-      "en": "A malicious HTTP server can corrupt memory and crash Hydra (denial of service).",
-      "tr": "Kötü niyetli bir HTTP sunucusu belleği bozup Hydra'yı çökertebilir (hizmet reddi)."
+      "en": "A malicious target server can inject script that runs when the HTML report is opened.",
+      "tr": "Kötü niyetli bir hedef sunucu, HTML raporu açıldığında çalışan betik enjekte edebilir."
     },
     "poc": null,
     "references": [
       {
         "label": "VulnCheck Advisory",
-        "url": "https://www.vulncheck.com/advisories/thc-hydra-through-9.7-stack-buffer-overflow-via-hydra-http-form-c-cookie-handling"
+        "url": "https://www.vulncheck.com/advisories/wfuzz-through-3.1.1-stored-xss-via-html-report-printer"
       },
       {
-        "label": "Fix commit",
-        "url": "https://github.com/vanhauser-thc/thc-hydra/commit/6ab9ad860ff92a18196566172a197070b3977f6e"
+        "label": "Upstream issue #395",
+        "url": "https://github.com/xmendez/wfuzz/issues/395"
+      }
+    ]
+  },
+  {
+    "id": "CVE-2026-134753",
+    "product": "dsniff",
+    "title": "dsniff decode_sniffer() Integer Underflow Out-of-Bounds Write",
+    "vulnType": "decode_sniffer() Integer Underflow leading to Out-of-Bounds Write (unauthenticated UDP port 2001 packet)",
+    "cwe": [
+      "CWE-191",
+      "CWE-787"
+    ],
+    "cvss": {
+      "v4": 8.3,
+      "v31": 7
+    },
+    "language": [
+      "C"
+    ],
+    "status": "unpatched",
+    "affected": "<= 2.5a2",
+    "fixedIn": null,
+    "repo": "https://github.com/VulnSVNC/CVE-2026-134753",
+    "rootCause": {
+      "en": "An integer underflow in decode_sniffer() (decode_sniffer.c) lets a crafted UDP datagram write past the global obuf buffer.",
+      "tr": "decode_sniffer() (decode_sniffer.c) içindeki tamsayı alt taşması, hazırlanmış bir UDP paketinin global obuf tamponunun ötesine yazmasına izin verir."
+    },
+    "impact": {
+      "en": "Unauthenticated remote attackers can corrupt memory and crash dsniff with a single UDP packet to port 2001. No patch is available.",
+      "tr": "Kimlik doğrulaması olmayan uzak saldırganlar UDP 2001 portuna tek paketle belleği bozup dsniff'i çökertebilir. Yama bulunmuyor."
+    },
+    "poc": null,
+    "references": [
+      {
+        "label": "VulnCheck Advisory",
+        "url": "https://www.vulncheck.com/advisories/dsniff-through-2-5a2-integer-underflow-out-of-bounds-write-via-decode-sniffer"
+      },
+      {
+        "label": "Upstream issue #7",
+        "url": "https://github.com/hackerschoice/dsniff/issues/7"
+      },
+      {
+        "label": "decode_sniffer.c (v2.5a2)",
+        "url": "https://github.com/hackerschoice/dsniff/blob/v2.5a2/decode_sniffer.c#L46"
       }
     ]
   },
@@ -243,41 +164,120 @@
     ]
   },
   {
-    "id": "CVE-2026-134758",
-    "product": "Wfuzz",
-    "title": "Wfuzz Stored XSS via HTML Report Printer",
-    "vulnType": "Stored XSS via HTML Report Printer (Unescaped URL/Redirect Injection)",
+    "id": "CVE-2026-133274",
+    "product": "THC-Hydra",
+    "title": "THC-Hydra Stack Buffer Overflow via hydra-http-form.c Cookie Handling",
+    "vulnType": "Stack Buffer Overflow in analyze_server_response() via crafted Set-Cookie headers (DoS)",
     "cwe": [
-      "CWE-79"
+      "CWE-121"
     ],
     "cvss": {
-      "v4": 2.3,
-      "v31": 4.7
+      "v4": 7.1
     },
     "language": [
+      "C",
       "Python"
     ],
     "status": "unknown",
-    "affected": "<= 3.1.1",
+    "affected": "<= 9.7",
     "fixedIn": null,
-    "repo": "https://github.com/VulnSVNC/CVE-2026-134758",
+    "repo": "https://github.com/VulnSVNC/CVE-2026-133274",
     "rootCause": {
-      "en": "Links returned by a target server are written unescaped into HTML reports by the HTML printer (links script), resulting in stored XSS.",
-      "tr": "Hedef sunucunun döndürdüğü bağlantılar, HTML yazıcısı (links betiği) tarafından kaçışlanmadan HTML raporuna yazılır ve kalıcı XSS oluşur."
+      "en": "In analyze_server_response() of hydra-http-form.c, a Set-Cookie header with an extra leading space followed by a repeated cookie name yields a negative strncpy length and overflows tmpcookie.",
+      "tr": "hydra-http-form.c içindeki analyze_server_response() fonksiyonunda, fazladan baştaki boşluk ve tekrarlanan çerez adı içeren Set-Cookie başlığı negatif strncpy uzunluğu üretir ve tmpcookie tamponunu taşırır."
     },
     "impact": {
-      "en": "A malicious target server can inject script that runs when the HTML report is opened.",
-      "tr": "Kötü niyetli bir hedef sunucu, HTML raporu açıldığında çalışan betik enjekte edebilir."
+      "en": "A malicious HTTP server can corrupt memory and crash Hydra (denial of service).",
+      "tr": "Kötü niyetli bir HTTP sunucusu belleği bozup Hydra'yı çökertebilir (hizmet reddi)."
     },
     "poc": null,
     "references": [
       {
         "label": "VulnCheck Advisory",
-        "url": "https://www.vulncheck.com/advisories/wfuzz-through-3.1.1-stored-xss-via-html-report-printer"
+        "url": "https://www.vulncheck.com/advisories/thc-hydra-through-9.7-stack-buffer-overflow-via-hydra-http-form-c-cookie-handling"
       },
       {
-        "label": "Upstream issue #395",
-        "url": "https://github.com/xmendez/wfuzz/issues/395"
+        "label": "Fix commit",
+        "url": "https://github.com/vanhauser-thc/thc-hydra/commit/6ab9ad860ff92a18196566172a197070b3977f6e"
+      }
+    ]
+  },
+  {
+    "id": "CVE-2026-125399",
+    "product": "Fluxion",
+    "title": "Fluxion Unauthenticated OS Command Injection via Crafted SSID",
+    "vulnType": "Zero-Click, Unauthenticated OS Command Injection via eval() on Attacker-Controlled ESSID",
+    "cwe": [
+      "CWE-78"
+    ],
+    "cvss": {
+      "v4": 8.6,
+      "v31": 8
+    },
+    "language": [
+      "Shell",
+      "Bash"
+    ],
+    "status": "patched",
+    "affected": "< 6.39",
+    "fixedIn": "6.39",
+    "repo": "https://github.com/VulnSVNC/CVE-2026-125399",
+    "rootCause": {
+      "en": "The target scanner in fluxion.sh decodes access point ESSIDs with eval after escaping only single quotes, so shell metacharacters in an attacker-controlled SSID are executed.",
+      "tr": "fluxion.sh içindeki hedef tarayıcı, erişim noktası ESSID değerlerini yalnızca tek tırnakları kaçışlayarak eval ile çözer; saldırgan kontrolündeki SSID içindeki kabuk metakarakterleri çalıştırılır."
+    },
+    "impact": {
+      "en": "An attacker within Wi-Fi range can broadcast a crafted SSID and run commands as root when an operator scans or selects it.",
+      "tr": "Wi-Fi menzilindeki bir saldırgan hazırlanmış SSID yayınlayarak, operatör taradığında veya seçtiğinde root olarak komut çalıştırabilir."
+    },
+    "poc": null,
+    "references": [
+      {
+        "label": "VulnCheck Advisory",
+        "url": "https://www.vulncheck.com/advisories/fluxion-before-6.39-os-command-injection-via-crafted-ssid"
+      },
+      {
+        "label": "Patch commit",
+        "url": "https://github.com/FluxionNetwork/fluxion/commit/be22b0c42f21144a712b62fc072a438a012eb5d7"
+      },
+      {
+        "label": "Fluxion v6.39 release",
+        "url": "https://github.com/FluxionNetwork/fluxion/releases/tag/v6.39"
+      }
+    ]
+  },
+  {
+    "id": "CVE-2026-115904",
+    "product": "Topluyo App",
+    "title": "Topluyo Desktop for Linux OS Command Injection in openExternalLinks()",
+    "vulnType": "OS Command Injection in openExternalLinks() (utils.js)",
+    "cwe": [
+      "CWE-78"
+    ],
+    "cvss": {
+      "v31": 9.6
+    },
+    "language": [
+      "JavaScript",
+      "Electron"
+    ],
+    "status": "patched",
+    "affected": "Desktop for Linux < 2026.9.2410",
+    "fixedIn": "2026.9.2410",
+    "repo": "https://github.com/VulnSVNC/CVE-2026-115904",
+    "rootCause": {
+      "en": "User-controlled URLs are processed unsafely in openExternalLinks() in utils.js, resulting in OS command injection.",
+      "tr": "utils.js içindeki openExternalLinks() fonksiyonunda kullanıcı kontrollü URL'ler güvensiz işlenir ve işletim sistemi komut enjeksiyonuna yol açar."
+    },
+    "impact": {
+      "en": "An attacker who controls a URL can run arbitrary OS commands with the privileges of the user who opens the link.",
+      "tr": "URL'yi kontrol eden saldırgan, bağlantıyı açan kullanıcının yetkileriyle rastgele işletim sistemi komutu çalıştırabilir."
+    },
+    "poc": null,
+    "references": [
+      {
+        "label": "Vendor advisory GHSA-vrrv-3f46-c3x7",
+        "url": "https://github.com/topluyo/App/security/advisories/GHSA-vrrv-3f46-c3x7"
       }
     ]
   }
