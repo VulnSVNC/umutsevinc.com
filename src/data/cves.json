@@ -1,32 +1,52 @@
 [
   {
-    "id": "CVE-2026-125399",
-    "product": "Fluxion",
-    "title": "Fluxion Unauthenticated OS Command Injection",
-    "vulnType": "Zero-Click, Unauthenticated OS Command Injection via eval() on Attacker-Controlled ESSID",
+    "id": "CVE-2026-136131",
+    "product": "hping3",
+    "title": "hping3 Out-of-Bounds Write in display_ipopt() via IP Record Route Option",
+    "vulnType": "Out-of-Bounds Write in display_ipopt() via IP Record Route Option (old_rr buffer overflow)",
     "cwe": [
-      "CWE-78"
+      "CWE-787"
     ],
     "cvss": {
-      "v4": 8.6,
-      "v31": 8.0
+      "v4": 6,
+      "v31": 5.9
     },
     "language": [
-      "Shell",
-      "Bash"
+      "C"
     ],
-    "status": "patched",
-    "affected": "< 6.39",
-    "fixedIn": "6.39",
-    "repo": "https://github.com/VulnSVNC/CVE-2026-125399",
+    "status": "unknown",
+    "affected": "<= commit 3547c76",
+    "fixedIn": null,
+    "repo": "https://github.com/VulnSVNC/CVE-2026-136131",
     "rootCause": {
-      "en": "An attacker-controlled ESSID value reaches eval() in Fluxion, which results in OS command injection without any user interaction.",
-      "tr": "Saldırgan kontrolündeki bir ESSID değeri Fluxion içinde eval() fonksiyonuna ulaşır ve kullanıcı etkileşimi olmadan işletim sistemi komut enjeksiyonuna yol açar."
+      "en": "Handling of the IP Record Route option in display_ipopt() overflows the old_rr buffer, resulting in an out-of-bounds write.",
+      "tr": "display_ipopt() içinde IP Record Route seçeneğinin işlenmesi old_rr tamponunu taşırır ve sınır dışı yazmaya neden olur."
     },
-    "impact": {
-      "en": "Unauthenticated, zero-click OS command execution on the host running Fluxion.",
-      "tr": "Fluxion çalıştıran sistemde kimlik doğrulaması gerektirmeyen, sıfır tıklamalı işletim sistemi komutu çalıştırma."
+    "impact": null,
+    "poc": null,
+    "references": []
+  },
+  {
+    "id": "CVE-2026-134758",
+    "product": "Wfuzz",
+    "title": "Wfuzz Stored XSS via HTML Report Printer",
+    "vulnType": "Stored XSS via HTML Report Printer (Unescaped URL/Redirect Injection)",
+    "cwe": [
+      "CWE-79"
+    ],
+    "cvss": null,
+    "language": [
+      "Python"
+    ],
+    "status": "unknown",
+    "affected": null,
+    "fixedIn": null,
+    "repo": "https://github.com/VulnSVNC/CVE-2026-134758",
+    "rootCause": {
+      "en": "The HTML report printer does not escape URL / redirect values, resulting in stored XSS.",
+      "tr": "HTML rapor yazıcısı URL / yönlendirme değerlerini kaçışlamaz (escape), bu da kalıcı (stored) XSS'e yol açar."
     },
+    "impact": null,
     "poc": null,
     "references": []
   },
@@ -41,7 +61,7 @@
     ],
     "cvss": {
       "v4": 8.3,
-      "v31": 7.0
+      "v31": 7
     },
     "language": [
       "C"
@@ -62,53 +82,20 @@
     "references": []
   },
   {
-    "id": "CVE-2026-115904",
-    "product": "Topluyo App",
-    "title": "Topluyo Desktop for Linux OS Command Injection in openExternalLinks()",
-    "vulnType": "OS Command Injection in openExternalLinks() (utils.js)",
-    "cwe": [
-      "CWE-78"
-    ],
+    "id": "CVE-2026-133305",
+    "product": "sqlmap",
+    "title": "sqlmap Cross-Origin Credential Leakage",
+    "vulnType": "Cross-Origin Credential Leakage",
+    "cwe": [],
     "cvss": null,
     "language": [
-      "JavaScript",
-      "Electron"
-    ],
-    "status": "patched",
-    "affected": "Desktop for Linux < 2026.9.2410",
-    "fixedIn": "2026.9.2410",
-    "repo": "https://github.com/VulnSVNC/CVE-2026-115904",
-    "rootCause": {
-      "en": "openExternalLinks() in utils.js is vulnerable to OS command injection.",
-      "tr": "utils.js içindeki openExternalLinks() fonksiyonu işletim sistemi komut enjeksiyonuna açıktır."
-    },
-    "impact": null,
-    "poc": null,
-    "references": []
-  },
-  {
-    "id": "CVE-2026-136131",
-    "product": "hping3",
-    "title": "hping3 Out-of-Bounds Write in display_ipopt() via IP Record Route Option",
-    "vulnType": "Out-of-Bounds Write in display_ipopt() via IP Record Route Option (old_rr buffer overflow)",
-    "cwe": [
-      "CWE-787"
-    ],
-    "cvss": {
-      "v4": 6.0,
-      "v31": 5.9
-    },
-    "language": [
-      "C"
+      "Python"
     ],
     "status": "unknown",
-    "affected": "<= commit 3547c76",
+    "affected": null,
     "fixedIn": null,
-    "repo": "https://github.com/VulnSVNC/CVE-2026-136131",
-    "rootCause": {
-      "en": "Handling of the IP Record Route option in display_ipopt() overflows the old_rr buffer, resulting in an out-of-bounds write.",
-      "tr": "display_ipopt() içinde IP Record Route seçeneğinin işlenmesi old_rr tamponunu taşırır ve sınır dışı yazmaya neden olur."
-    },
+    "repo": "https://github.com/VulnSVNC/CVE-2026-133305",
+    "rootCause": null,
     "impact": null,
     "poc": null,
     "references": []
@@ -142,43 +129,56 @@
     "references": []
   },
   {
-    "id": "CVE-2026-133305",
-    "product": "sqlmap",
-    "title": "sqlmap Cross-Origin Credential Leakage",
-    "vulnType": "Cross-Origin Credential Leakage",
-    "cwe": [],
-    "cvss": null,
-    "language": [
-      "Python"
+    "id": "CVE-2026-125399",
+    "product": "Fluxion",
+    "title": "Fluxion Unauthenticated OS Command Injection",
+    "vulnType": "Zero-Click, Unauthenticated OS Command Injection via eval() on Attacker-Controlled ESSID",
+    "cwe": [
+      "CWE-78"
     ],
-    "status": "unknown",
-    "affected": null,
-    "fixedIn": null,
-    "repo": "https://github.com/VulnSVNC/CVE-2026-133305",
-    "rootCause": null,
-    "impact": null,
+    "cvss": {
+      "v4": 8.6,
+      "v31": 8
+    },
+    "language": [
+      "Shell",
+      "Bash"
+    ],
+    "status": "patched",
+    "affected": "< 6.39",
+    "fixedIn": "6.39",
+    "repo": "https://github.com/VulnSVNC/CVE-2026-125399",
+    "rootCause": {
+      "en": "An attacker-controlled ESSID value reaches eval() in Fluxion, which results in OS command injection without any user interaction.",
+      "tr": "Saldırgan kontrolündeki bir ESSID değeri Fluxion içinde eval() fonksiyonuna ulaşır ve kullanıcı etkileşimi olmadan işletim sistemi komut enjeksiyonuna yol açar."
+    },
+    "impact": {
+      "en": "Unauthenticated, zero-click OS command execution on the host running Fluxion.",
+      "tr": "Fluxion çalıştıran sistemde kimlik doğrulaması gerektirmeyen, sıfır tıklamalı işletim sistemi komutu çalıştırma."
+    },
     "poc": null,
     "references": []
   },
   {
-    "id": "CVE-2026-134758",
-    "product": "Wfuzz",
-    "title": "Wfuzz Stored XSS via HTML Report Printer",
-    "vulnType": "Stored XSS via HTML Report Printer (Unescaped URL/Redirect Injection)",
+    "id": "CVE-2026-115904",
+    "product": "Topluyo App",
+    "title": "Topluyo Desktop for Linux OS Command Injection in openExternalLinks()",
+    "vulnType": "OS Command Injection in openExternalLinks() (utils.js)",
     "cwe": [
-      "CWE-79"
+      "CWE-78"
     ],
     "cvss": null,
     "language": [
-      "Python"
+      "JavaScript",
+      "Electron"
     ],
-    "status": "unknown",
-    "affected": null,
-    "fixedIn": null,
-    "repo": "https://github.com/VulnSVNC/CVE-2026-134758",
+    "status": "patched",
+    "affected": "Desktop for Linux < 2026.9.2410",
+    "fixedIn": "2026.9.2410",
+    "repo": "https://github.com/VulnSVNC/CVE-2026-115904",
     "rootCause": {
-      "en": "The HTML report printer does not escape URL / redirect values, resulting in stored XSS.",
-      "tr": "HTML rapor yazıcısı URL / yönlendirme değerlerini kaçışlamaz (escape), bu da kalıcı (stored) XSS'e yol açar."
+      "en": "openExternalLinks() in utils.js is vulnerable to OS command injection.",
+      "tr": "utils.js içindeki openExternalLinks() fonksiyonu işletim sistemi komut enjeksiyonuna açıktır."
     },
     "impact": null,
     "poc": null,
