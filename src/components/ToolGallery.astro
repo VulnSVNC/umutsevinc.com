@@ -42,13 +42,20 @@ const items = (cvesData as any[])
         href={`/cve/${slugOf(cve.id)}`}
         class="group shrink-0 snap-start w-[320px] sm:w-[380px] border border-line bg-surface hover:border-brass-dim transition-colors overflow-hidden"
       >
-        <div class="aspect-video overflow-hidden bg-surface-2">
+        <div class="relative aspect-video overflow-hidden bg-surface-2">
           <img
             src={`/images/cve/card/${cve.id}.webp`}
             alt={`${cve.product} — ${cve.vulnType}`}
             loading="lazy"
             decoding="async"
             class="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-300"
+          />
+          <img
+            src="/images/stamp-vs.webp"
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            class="stamp-mark absolute top-1/2 left-1/2 w-[42%] min-w-[108px] max-w-[160px]"
           />
         </div>
         <p class="font-mono text-[11px] px-4 py-2.5 border-y border-line-soft text-faint truncate">
@@ -71,6 +78,28 @@ const items = (cvesData as any[])
     <button type="button" id="gallery-next" aria-label="Sonraki" class="border border-line hover:border-brass px-3 py-1.5 text-sm text-muted hover:text-ink transition-colors">›</button>
   </div>
 </section>
+
+<style>
+  .stamp-mark {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(-11deg) scale(2.4);
+    filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.5));
+    transition: opacity 0.1s ease-out, transform 0.1s ease-out;
+    will-change: transform, opacity;
+  }
+  .group:hover .stamp-mark {
+    opacity: 0.88;
+    transition: opacity 0.1s ease-out, transform 0.32s cubic-bezier(0.18, 1.6, 0.4, 1);
+    transform: translate(-50%, -50%) rotate(-11deg) scale(1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stamp-mark,
+    .group:hover .stamp-mark {
+      transform: translate(-50%, -50%) rotate(-11deg) scale(1);
+      transition: opacity 0.15s ease-out;
+    }
+  }
+</style>
 
 <script>
   const track = document.getElementById('gallery-track');
