@@ -48,9 +48,13 @@ const maxScore = scores.length ? Math.max(...scores) : null;
         {SITE.teaching.map((t) => (
           <li>
             <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5">
-              <p class="text-ink">{t.name} <span class="text-faint font-normal">— {t.org}</span></p>
+              <p class="text-ink">
+                {t.name}
+                <span class="ml-2 text-[11px] text-brass border border-brass-dim/60 px-1.5 py-0.5 align-middle whitespace-nowrap">{t.role.tr}</span>
+              </p>
               <span class="text-xs text-faint shrink-0">{t.date.tr}</span>
             </div>
+            <p class="mt-0.5 text-sm text-muted">{t.org}</p>
             <p class="mt-1 text-sm text-muted leading-relaxed">{t.description.tr}</p>
           </li>
         ))}

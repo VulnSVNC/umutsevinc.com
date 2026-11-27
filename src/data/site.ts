@@ -46,20 +46,22 @@ export const SITE = {
   teaching: [
     {
       name: 'Siber Güvenlik ve Etik Hacker Eğitimi',
+      role: { tr: 'Eğitmen', en: 'Instructor' },
       org: 'Insiderrs Academy',
       date: { tr: 'Ekim 2024 – Ocak 2025', en: 'October 2024 – January 2025' },
       description: {
-        tr: 'Temel ağ güvenliği, etik hackleme ve pratik laboratuvar çalışmalarını kapsayan 3 aylık eğitim programı.',
-        en: 'A three-month training program covering fundamental network security, ethical hacking, and hands-on lab exercises.',
+        tr: 'Temel ağ güvenliği, etik hackleme ve pratik laboratuvar çalışmalarını kapsayan 3 aylık eğitim programını eğitmen olarak verdim.',
+        en: 'A three-month training program covering fundamental network security, ethical hacking, and hands-on lab exercises, which I delivered as instructor.',
       },
     },
     {
       name: 'Adli Bilişim Süreçleri Semineri',
+      role: { tr: 'Konuşmacı', en: 'Speaker' },
       org: 'Insiderrs Academy — Fırat Üniversitesi Adli Bilişim Mühendisliği',
       date: { tr: '23 Kasım 2024', en: 'November 23, 2024' },
       description: {
-        tr: 'Fırat Üniversitesi Adli Bilişim Mühendisliği öğrencilerine küresel ölçekte siber güvenlik ve adli bilişim süreçleri üzerine verilen seminer.',
-        en: 'A seminar on global-scale cybersecurity and digital forensics processes delivered to Fırat University Digital Forensics Engineering students.',
+        tr: 'Fırat Üniversitesi Adli Bilişim Mühendisliği öğrencilerine küresel ölçekte siber güvenlik ve adli bilişim süreçleri üzerine konuşmacı olarak seminer verdim.',
+        en: 'A seminar on global-scale cybersecurity and digital forensics processes, which I delivered as speaker to Fırat University Digital Forensics Engineering students.',
       },
     },
   ],
