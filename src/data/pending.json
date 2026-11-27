@@ -10,5 +10,17 @@
     "title": "Path Traversal-to-RCE",
     "process": "VulnCheck CNA",
     "status": "coordinated-disclosure"
+  },
+  {
+    "product": "PayTR Magento 2 Payment",
+    "title": "Auth Bypass to Order Status Forgery",
+    "process": "Siber Güvenlik Başkanlığı",
+    "status": "coordinated-disclosure"
+  },
+  {
+    "product": "PayTR Magento 2 Bank Transfer",
+    "title": "Auth Bypass to Order Status Forgery",
+    "process": "Siber Güvenlik Başkanlığı",
+    "status": "coordinated-disclosure"
   }
 ]
