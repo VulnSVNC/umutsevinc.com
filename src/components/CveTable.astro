@@ -1,14 +1,15 @@
 ---
 import { slugOf, topScore, severity } from '../lib/cve';
-interface Props { cves: any[] }
-const { cves } = Astro.props;
+interface Props { cves: any[]; lang?: 'tr' | 'en' }
+const { cves, lang = 'tr' } = Astro.props;
+const prefix = lang === 'en' ? '/en' : '';
 const langs = [...new Set(cves.flatMap((c) => c.language))].sort();
 ---
 <div class="flex flex-wrap gap-3 mb-6">
-  <input id="cve-q" type="search" placeholder="Ara: CVE, yazılım, zafiyet türü, CWE…"
+  <input id="cve-q" type="search" placeholder={lang === 'en' ? 'Search: CVE, software, vulnerability type, CWE…' : 'Ara: CVE, yazılım, zafiyet türü, CWE…'}
     class="flex-1 min-w-60 bg-transparent border-b border-line text-sm py-2 placeholder:text-faint focus:outline-none focus:border-brass" />
   <select id="cve-lang" class="bg-transparent border-b border-line text-sm py-2 text-muted focus:outline-none focus:border-brass">
-    <option value="">Tüm diller</option>
+    <option value="">{lang === 'en' ? 'All languages' : 'Tüm diller'}</option>
     {langs.map((l) => <option value={l.toLowerCase()}>{l}</option>)}
   </select>
 </div>
@@ -18,7 +19,7 @@ const langs = [...new Set(cves.flatMap((c) => c.language))].sort();
     const s = topScore(c);
     const sev = severity(s);
     return (
-      <a href={`/cve/${slugOf(c.id)}`} data-row data-lang={c.language.join(' ').toLowerCase()}
+      <a href={`${prefix}/cve/${slugOf(c.id)}`} data-row data-lang={c.language.join(' ').toLowerCase()}
           data-text={`${c.id} ${c.product} ${c.vulnType} ${c.cwe.join(' ')} ${c.language.join(' ')}`.toLowerCase()}
           class:list={[
             'group relative block border border-l-[3px] bg-surface p-5 transition-all duration-200 hover:border-brass-dim hover:-translate-y-0.5',
@@ -41,7 +42,7 @@ const langs = [...new Set(cves.flatMap((c) => c.language))].sort();
                 <span class={`inline-block w-1.5 h-1.5 rounded-full ${sev.dot}`}></span>
               )}
               <span class={sev.text}>{s.toFixed(1)}</span>
-              <span class={`${sev.text} opacity-80`}>· {sev.trLabel}</span>
+              <span class={`${sev.text} opacity-80`}>· {lang === 'en' ? sev.label : sev.trLabel}</span>
             </span>
           ) : <span class="text-faint text-xs shrink-0">—</span>}
         </div>
@@ -55,24 +56,24 @@ const langs = [...new Set(cves.flatMap((c) => c.language))].sort();
     );
   })}
 </div>
-<p id="cve-empty" class="hidden text-sm text-faint mt-4">Eşleşen kayıt yok.</p>
+<p id="cve-empty" class="hidden text-sm text-faint mt-4">{lang === 'en' ? 'No matching records.' : 'Eşleşen kayıt yok.'}</p>
 
-<script>
-  const q = document.getElementById('cve-q') as HTMLInputElement;
-  const lang = document.getElementById('cve-lang') as HTMLSelectElement;
-  const rows = [...document.querySelectorAll<HTMLElement>('[data-row]')];
-  const empty = document.getElementById('cve-empty')!;
+<script define:vars={{ localeTag: lang === 'en' ? 'en' : 'tr' }}>
+  const q = document.getElementById('cve-q');
+  const langSel = document.getElementById('cve-lang');
+  const rows = [...document.querySelectorAll('[data-row]')];
+  const empty = document.getElementById('cve-empty');
   function apply() {
-    const term = q.value.trim().toLocaleLowerCase('tr');
-    const l = lang.value;
+    const term = q.value.trim().toLocaleLowerCase(localeTag);
+    const l = langSel.value;
     let shown = 0;
     for (const r of rows) {
-      const ok = (!term || r.dataset.text!.includes(term)) && (!l || r.dataset.lang!.includes(l));
+      const ok = (!term || r.dataset.text.includes(term)) && (!l || r.dataset.lang.includes(l));
       r.style.display = ok ? '' : 'none';
       if (ok) shown++;
     }
     empty.classList.toggle('hidden', shown > 0);
   }
   q.addEventListener('input', apply);
-  lang.addEventListener('change', apply);
+  langSel.addEventListener('change', apply);
 </script>

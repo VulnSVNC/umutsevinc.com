@@ -1,0 +1,28 @@
+---
+import Base from '../../../layouts/Base.astro';
+import CveTable from '../../../components/CveTable.astro';
+import cves from '../../../data/cves.json';
+import { topScore } from '../../../lib/cve';
+
+const sortedCves = [...cves].sort((a, b) => (topScore(b) ?? -1) - (topScore(a) ?? -1));
+const title = `CVE Records | Umut Sevinç (VulnSVNC)`;
+const description = `${cves.length} published CVE records by Umut Sevinç (VulnSVNC), with root-cause analyses and PoCs.`;
+---
+<Base
+  lang="en"
+  title={title}
+  description={description}
+  path="/en/cve"
+  alternates={[{ hreflang: 'tr', path: '/cve' }, { hreflang: 'en', path: '/en/cve' }, { hreflang: 'x-default', path: '/cve' }]}
+>
+  <nav class="text-xs text-faint mb-8" aria-label="breadcrumb">
+    <a class="hover:text-muted" href="/en">Home</a> <span class="mx-1.5">/</span> <span class="font-mono text-muted">CVE Records</span>
+  </nav>
+
+  <div class="flex items-baseline justify-between gap-4 mb-2">
+    <h1 class="font-serif text-3xl text-ink">CVE Records</h1>
+  </div>
+  <p class="text-sm text-muted mb-7">{cves.length} published CVE records with root-cause analyses.</p>
+
+  <CveTable cves={sortedCves} lang="en" />
+</Base>

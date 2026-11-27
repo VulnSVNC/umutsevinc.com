@@ -5,16 +5,26 @@ interface Props {
   latestId: string;
   latestProduct: string;
   pendingProduct: string;
+  lang?: 'tr' | 'en';
 }
-const { total, maxScore, latestId, latestProduct, pendingProduct } = Astro.props;
+const { total, maxScore, latestId, latestProduct, pendingProduct, lang = 'tr' } = Astro.props;
 
-const lines = [
-  { p: '$ ', c: 'research --status' },
-  { p: '', c: `${total} CVE kaydı yayımlandı`, dim: true },
-  { p: '', c: `en yüksek önem derecesi: ${maxScore.toFixed(1)} (Kritik)`, dim: true },
-  { p: '', c: `son kayıt: ${latestId} — ${latestProduct}`, dim: true },
-  { p: '', c: `sırada: ${pendingProduct} inceleniyor`, dim: true, brass: true },
-];
+const lines =
+  lang === 'en'
+    ? [
+        { p: '$ ', c: 'research --status' },
+        { p: '', c: `${total} CVEs published`, dim: true },
+        { p: '', c: `highest severity: ${maxScore.toFixed(1)} (Critical)`, dim: true },
+        { p: '', c: `latest record: ${latestId} — ${latestProduct}`, dim: true },
+        { p: '', c: `in progress: ${pendingProduct} under review`, dim: true, brass: true },
+      ]
+    : [
+        { p: '$ ', c: 'research --status' },
+        { p: '', c: `${total} CVE kaydı yayımlandı`, dim: true },
+        { p: '', c: `en yüksek önem derecesi: ${maxScore.toFixed(1)} (Kritik)`, dim: true },
+        { p: '', c: `son kayıt: ${latestId} — ${latestProduct}`, dim: true },
+        { p: '', c: `sırada: ${pendingProduct} inceleniyor`, dim: true, brass: true },
+      ];
 ---
 
 <div class="terminal border border-line bg-surface font-mono text-[13px] leading-relaxed w-full max-w-md lg:max-w-none" aria-hidden="true">

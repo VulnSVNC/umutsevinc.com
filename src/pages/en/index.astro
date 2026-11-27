@@ -1,0 +1,113 @@
+---
+import Base from '../../layouts/Base.astro';
+import SeoSchema from '../../components/SeoSchema.astro';
+import TerminalHero from '../../components/TerminalHero.astro';
+import ToolGallery from '../../components/ToolGallery.astro';
+import cves from '../../data/cves.json';
+import pending from '../../data/pending.json';
+import { SITE } from '../../data/site';
+import { topScore } from '../../lib/cve';
+
+const scores = cves.map(topScore).filter((s): s is number => s != null);
+const maxScore = scores.length ? Math.max(...scores) : null;
+const languages = [...new Set(cves.flatMap((c) => c.language))];
+const latestCve = [...cves].sort((a, b) => b.id.localeCompare(a.id))[0];
+const title = 'Umut Sevinç (VulnSVNC) | Turkey-Based Vulnerability Researcher & CVE Records';
+---
+<Base
+  lang="en"
+  title={title}
+  description="Umut Sevinç (VulnSVNC): Turkey-based vulnerability researcher. Published CVE records, root-cause analyses, and research into offensive security tooling."
+  path="/en"
+  alternates={[
+    { hreflang: 'tr', path: '/' },
+    { hreflang: 'en', path: '/en' },
+    { hreflang: 'x-default', path: '/' },
+  ]}
+>
+  <SeoSchema slot="head" cves={cves} />
+
+  <section lang="en" aria-labelledby="hero-h1" class="grid grid-cols-1 lg:grid-cols-[1fr_22rem] gap-10 lg:gap-16 lg:items-center">
+    <div class="max-w-2xl">
+      <p class="reveal reveal-1 text-sm text-muted mb-4">Independent vulnerability research, Türkiye</p>
+      <h1 id="hero-h1" class="reveal reveal-2 font-serif text-4xl sm:text-[2.75rem] leading-[1.15] text-ink">
+        Umut SEVİNÇ
+      </h1>
+
+      <div class="reveal reveal-3 mt-7 max-w-xl border-l-2 border-brass-dim pl-5 sm:pl-6">
+        <p class="font-serif text-[1.3rem] sm:text-[1.45rem] leading-snug text-ink/95">
+          Vulnerability researcher and offensive security analyst based in Türkiye, publishing CVEs in
+          widely used security tooling, with a focus on memory corruption, OS command injection, and
+          remote code execution (RCE).
+        </p>
+      </div>
+
+      <ul class="reveal reveal-4 mt-6 flex flex-wrap gap-2">
+        {SITE.expertise.map((e) => <li class="text-xs text-muted border border-line px-2.5 py-1">{e}</li>)}
+      </ul>
+
+      <p class="reveal reveal-5 mt-8 flex flex-wrap gap-3 text-sm">
+        <a class="text-ink border border-ink px-4 py-2 hover:bg-ink hover:text-bg transition-colors" rel="me noopener" href={SITE.github}>GitHub</a>
+        <a class="text-ink border border-line px-4 py-2 hover:border-brass transition-colors" rel="me noopener" href={SITE.linkedin}>LinkedIn</a>
+        <a class="text-muted border border-line px-4 py-2 hover:border-brass hover:text-ink transition-colors" href="/en/about">Methodology</a>
+      </p>
+    </div>
+
+    <div class="reveal reveal-1 order-first lg:order-none w-full">
+      <TerminalHero
+        lang="en"
+        total={cves.length}
+        maxScore={maxScore ?? 0}
+        latestId={latestCve.id}
+        latestProduct={latestCve.product}
+        pendingProduct={pending[0]?.product ?? '—'}
+      />
+    </div>
+  </section>
+
+  <section class="mt-14 border-y border-line" aria-label="Statistics">
+    <div class="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 divide-x-0 sm:divide-x divide-line">
+      <div class="py-5 sm:px-6">
+        <div class="font-serif text-3xl text-ink font-feature-tab">{cves.length}</div>
+        <div class="text-xs text-muted mt-1">Total CVEs</div>
+      </div>
+      <div class="py-5 sm:px-6">
+        <div class="font-serif text-3xl text-ink font-feature-tab">{maxScore != null ? maxScore.toFixed(1) : '—'}</div>
+        <div class="text-xs text-muted mt-1">Highest CVSS score</div>
+      </div>
+      <div class="py-5 sm:px-6">
+        <div class="font-serif text-lg text-ink leading-snug">{languages.join(', ')}</div>
+        <div class="text-xs text-muted mt-1">Target languages / technologies</div>
+      </div>
+    </div>
+  </section>
+
+  <ToolGallery lang="en" />
+
+  <p class="mt-10 text-sm">
+    <a class="text-ink border-b border-line hover:border-brass transition-colors" href="/en/cve">
+      View all CVE records ({cves.length}) →
+    </a>
+  </p>
+
+  <section class="mt-14" aria-labelledby="pending-h2">
+    <h2 id="pending-h2" class="font-serif text-2xl text-ink mb-5">Ongoing Research</h2>
+    <ul class="space-y-3">
+      {pending.map((p) => (
+        <li class="border-l-2 border-brass-dim pl-4 py-1">
+          <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <p class="text-ink"><span class="font-medium">{p.product}</span> — {p.title}</p>
+            <span class="text-xs text-brass shrink-0 inline-flex items-center gap-2">
+              <span class="relative flex h-2 w-2" aria-hidden="true">
+                <span class="pulse-ring absolute inline-flex h-full w-full rounded-full bg-brass"></span>
+                <span class="relative inline-flex h-2 w-2 rounded-full bg-brass"></span>
+              </span>
+              under review by {p.process}
+            </span>
+          </div>
+        </li>
+      ))}
+    </ul>
+    <p class="text-xs text-faint mt-4">Details are withheld until the CVE is published.</p>
+  </section>
+</Base>

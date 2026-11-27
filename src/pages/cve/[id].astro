@@ -69,7 +69,18 @@ const facts: [string, string][] = [
   ['Dil', cve.language.join(' / ')],
 ];
 ---
-<Base title={title} description={description} path={path} ogType="article" image={hasBanner ? bannerPath : undefined}>
+<Base
+  title={title}
+  description={description}
+  path={path}
+  ogType="article"
+  image={hasBanner ? bannerPath : undefined}
+  alternates={[
+    { hreflang: 'tr', path: `/cve/${slugOf(cve.id)}` },
+    { hreflang: 'en', path: `/en/cve/${slugOf(cve.id)}` },
+    { hreflang: 'x-default', path: `/cve/${slugOf(cve.id)}` },
+  ]}
+>
   <Fragment slot="head">
     <script type="application/ld+json" set:html={ld(techArticle)} />
     {sourceCode && <script type="application/ld+json" set:html={ld(sourceCode)} />}

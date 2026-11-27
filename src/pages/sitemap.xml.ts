@@ -4,7 +4,16 @@ import { slugOf } from '../lib/cve';
 
 export function GET({ site }: APIContext) {
   const base = String(site).replace(/\/$/, '');
-  const urls = ['/', '/cve', '/tr/hakkinda', '/en/about', ...cves.map((c) => `/cve/${slugOf(c.id)}`)];
+  const urls = [
+    '/',
+    '/cve',
+    '/tr/hakkinda',
+    '/en',
+    '/en/cve',
+    '/en/about',
+    ...cves.map((c) => `/cve/${slugOf(c.id)}`),
+    ...cves.map((c) => `/en/cve/${slugOf(c.id)}`),
+  ];
   const body = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map((u) => `  <url><loc>${base}${u === '/' ? '/' : u}</loc></url>`).join('\n')}
