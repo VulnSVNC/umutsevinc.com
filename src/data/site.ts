@@ -23,6 +23,26 @@ export const SITE = {
     'Offensive Security',
   ],
   communities: ['Insiderrs Academy (Kurucu Üye & Eğitmen)', 'SiberGKT', 'HiddenWay'],
+  projects: [
+    {
+      name: 'SpaceH4CKs CTF',
+      org: 'SiberGKT',
+      date: { tr: 'Ekim 2025', en: 'October 2025' },
+      description: {
+        tr: 'Siber Gizliliği Koruma Teşkilatı (SiberGKT) ile düzenlenen CTF etkinliği; proje yönetimi ve lab/senaryo geliştirme.',
+        en: 'CTF event organized with Siber Gizliliği Koruma Teşkilatı (SiberGKT); project management and lab/scenario development.',
+      },
+    },
+    {
+      name: 'Flag-Hunter CTF',
+      org: 'Insiderrs Academy',
+      date: { tr: 'Ocak 2024', en: 'January 2024' },
+      description: {
+        tr: 'Insiderrs Academy ile düzenlenen CTF etkinliği.',
+        en: 'CTF event organized with Insiderrs Academy.',
+      },
+    },
+  ],
   credentials: [
     {
       name: 'Anthropic Defense Access',
