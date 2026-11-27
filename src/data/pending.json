@@ -4,5 +4,11 @@
     "title": "CSRF-to-RCE",
     "process": "VulnCheck CNA",
     "status": "coordinated-disclosure"
+  },
+  {
+    "product": "Gradio",
+    "title": "Path Traversal-to-RCE",
+    "process": "VulnCheck CNA",
+    "status": "coordinated-disclosure"
   }
 ]
