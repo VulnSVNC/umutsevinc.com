@@ -5,8 +5,8 @@ import cves from '../../../data/cves.json';
 import { topScore } from '../../../lib/cve';
 
 const sortedCves = [...cves].sort((a, b) => (topScore(b) ?? -1) - (topScore(a) ?? -1));
-const title = `CVE Records | Umut Sevinç (VulnSVNC)`;
-const description = `${cves.length} published CVE records by Umut Sevinç (VulnSVNC), with root-cause analyses and PoCs.`;
+const title = `CVE Records | Umut SEVİNÇ (VulnSVNC)`;
+const description = `${cves.length} published CVE records by Umut SEVİNÇ (VulnSVNC), with root-cause analyses and PoCs.`;
 ---
 <Base
   lang="en"

@@ -23,7 +23,7 @@ const score = topScore(cve);
 const sev = severity(score);
 const st = STATUS[cve.status] ?? STATUS.unknown;
 const title = `${cve.id}: ${cve.title} | ${SITE.name}`;
-const description = `${cve.id} — ${cve.vulnType}. Etkilenen: ${cve.product}${cve.affected ? ' (' + cve.affected + ')' : ''}. Araştırmacı: Umut Sevinç (VulnSVNC).`;
+const description = `${cve.id} — ${cve.vulnType}. Etkilenen: ${cve.product}${cve.affected ? ' (' + cve.affected + ')' : ''}. Araştırmacı: Umut SEVİNÇ (VulnSVNC).`;
 
 const bannerPath = `/images/cve/${cve.id}.webp`;
 const hasBanner = fs.existsSync(nodePath.join(process.cwd(), 'public', bannerPath.slice(1)));

@@ -12,11 +12,11 @@ const scores = cves.map(topScore).filter((s): s is number => s != null);
 const maxScore = scores.length ? Math.max(...scores) : null;
 const languages = [...new Set(cves.flatMap((c) => c.language))];
 const latestCve = [...cves].sort((a, b) => b.id.localeCompare(a.id))[0];
-const title = 'Umut Sevinç (VulnSVNC) | Türkiye Merkezli Zafiyet Araştırmacısı & CVE Kayıtları';
+const title = 'Umut SEVİNÇ (VulnSVNC) | Türkiye Merkezli Zafiyet Araştırmacısı & CVE Kayıtları';
 ---
 <Base
   title={title}
-  description="Umut Sevinç (VulnSVNC): Türkiye merkezli zafiyet araştırmacısı. Yayımlanmış CVE kayıtları, kök neden analizleri ve ofansif güvenlik araçları üzerine araştırmalar. / Turkey-based vulnerability researcher with published CVEs."
+  description="Umut SEVİNÇ (VulnSVNC): Türkiye merkezli zafiyet araştırmacısı. Yayımlanmış CVE kayıtları, kök neden analizleri ve ofansif güvenlik araçları üzerine araştırmalar. / Turkey-based vulnerability researcher with published CVEs."
   path="/"
   alternates={[
     { hreflang: 'tr', path: '/' },

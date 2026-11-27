@@ -1,8 +1,8 @@
 export const SITE = {
   url: 'https://umutsevinc.com',
-  name: 'Umut Sevinç (VulnSVNC)',
-  fullName: 'Umut Sevinç',
-  alternateNames: ['VulnSVNC', 'Umut SEVİNÇ'],
+  name: 'Umut SEVİNÇ (VulnSVNC)',
+  fullName: 'Umut SEVİNÇ',
+  alternateNames: ['VulnSVNC', 'Umut Sevinç'],
   handle: 'VulnSVNC',
   jobTitle: 'Security Researcher & Vulnerability Analyst',
   displayTitle: 'Vulnerability Researcher & Offensive Security Analyst',
@@ -76,5 +76,5 @@ export const SITE = {
     },
   ],
   description:
-    "Umut Sevinç (VulnSVNC): Türkiye merkezli zafiyet araştırmacısı. Yayımlanmış CVE kayıtları, kök neden analizleri ve ofansif güvenlik araçları üzerine araştırmalar. Turkey-based vulnerability researcher with published CVEs.",
+    "Umut SEVİNÇ (VulnSVNC): Türkiye merkezli zafiyet araştırmacısı. Yayımlanmış CVE kayıtları, kök neden analizleri ve ofansif güvenlik araçları üzerine araştırmalar. Turkey-based vulnerability researcher with published CVEs.",
 };
