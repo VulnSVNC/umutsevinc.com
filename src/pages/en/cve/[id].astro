@@ -5,7 +5,7 @@ import { Code } from 'astro:components';
 import Base from '../../../layouts/Base.astro';
 import cves from '../../../data/cves.json';
 import { SITE } from '../../../data/site';
-import { slugOf, topScore, severity, STATUS, codeLang } from '../../../lib/cve';
+import { slugOf, topScore, severity, STATUS, codeLang, isSafeHref } from '../../../lib/cve';
 import { readWriteup } from '../../../lib/writeups';
 
 export function getStaticPaths() {
@@ -35,7 +35,9 @@ const refsRaw: { label: string; href: string }[] = [
   ...(cve.references ?? []).map((r: any) => ({ label: r.label ?? r.url, href: r.url ?? r.href })),
 ];
 const seenHrefs = new Set<string>();
-const refs = refsRaw.filter((r) => (seenHrefs.has(r.href) ? false : (seenHrefs.add(r.href), true)));
+const refs = refsRaw
+  .filter((r) => isSafeHref(r.href))
+  .filter((r) => (seenHrefs.has(r.href) ? false : (seenHrefs.add(r.href), true)));
 
 const techArticle = {
   '@context': 'https://schema.org',
@@ -143,7 +145,7 @@ const facts: [string, string][] = [
           ) : (
             <p class="mt-3 text-muted">
               PoC code has not been published on this page.
-              {cve.repo ? <> If available, see the <a class="border-b border-line hover:border-brass" href={cve.repo} rel="noopener">GitHub repository</a> for details.</> : null}
+              {isSafeHref(cve.repo) ? <> If available, see the <a class="border-b border-line hover:border-brass" href={cve.repo} rel="noopener">GitHub repository</a> for details.</> : null}
             </p>
           )}
         </section>

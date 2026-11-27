@@ -1,5 +1,19 @@
 export const slugOf = (id: string) => id.toLowerCase();
 
+// Defense-in-depth: external reference URLs (e.g. from upstream CVE records)
+// must never be rendered as an <a href> unless they are plain http(s) links.
+// This blocks javascript:/data:/vbscript: and other script-executing schemes
+// from ever reaching a clickable link on the page.
+export function isSafeHref(href: unknown): href is string {
+  if (typeof href !== 'string' || !href) return false;
+  try {
+    const u = new URL(href);
+    return u.protocol === 'https:' || u.protocol === 'http:';
+  } catch {
+    return false;
+  }
+}
+
 export function topScore(c: any): number | null {
   const s = Math.max(c?.cvss?.v4 ?? 0, c?.cvss?.v31 ?? 0);
   return s > 0 ? s : null;

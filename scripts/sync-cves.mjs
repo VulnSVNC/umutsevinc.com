@@ -27,6 +27,16 @@ const norm = (s) => String(s).toLocaleLowerCase('tr').normalize('NFC');
 const NEEDLES = NAMES.map(norm);
 const hasName = (v) => NEEDLES.some((n) => norm(JSON.stringify(v ?? '')).includes(n) || norm(JSON.stringify(v ?? '')).includes(n.replace('ç', 'c').replace('i̇', 'i')));
 
+// IDs ultimately flow into file paths (writeups/<id>.md) and into URLs built
+// by simple string interpolation (cvelistUrl, fetchReadme). `candidates` is
+// seeded from local, trusted data but also from NVD's keywordSearch response
+// (nvdCandidates) — a network response is not somewhere we should trust a
+// well-formed shape without checking. Rejecting anything that isn't a plain
+// "CVE-YYYY-NNNN..." string closes off path traversal (e.g. an id containing
+// "../") and keeps every downstream URL pointed only at the expected host.
+const CVE_ID_RE = /^CVE-\d{4}-\d{4,19}$/;
+const isValidCveId = (id) => typeof id === 'string' && CVE_ID_RE.test(id);
+
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 async function getJson(url, headers = {}, tries = 3) {
   for (let i = 1; i <= tries; i++) {
@@ -52,7 +62,7 @@ async function nvdCandidates() {
     try {
       const url = `https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch=${encodeURIComponent(name)}&resultsPerPage=200`;
       const json = await getJson(url, headers);
-      for (const v of json?.vulnerabilities ?? []) ids.add(v.cve.id);
+      for (const v of json?.vulnerabilities ?? []) if (isValidCveId(v.cve?.id)) ids.add(v.cve.id);
     } catch (e) {
       console.warn(`! NVD araması başarısız (${name}): ${e.message}`);
     }
@@ -144,6 +154,10 @@ async function main() {
   const writeupsSynced = [];
 
   for (const id of [...candidates].sort()) {
+    if (!isValidCveId(id)) {
+      console.warn(`! Geçersiz CVE ID formatı, atlanıyor: ${JSON.stringify(id)}`);
+      continue;
+    }
     let record = null;
     try {
       record = await getJson(cvelistUrl(id));

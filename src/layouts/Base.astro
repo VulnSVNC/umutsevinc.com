@@ -35,6 +35,18 @@ const enPath = lang === 'en' ? path : otherPath;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--
+      GitHub Pages serves this site as plain static files and cannot send
+      custom HTTP response headers, so the usual Content-Security-Policy /
+      Referrer-Policy headers aren't available here. These <meta> equivalents
+      are weaker (they can't restrict frame-ancestors or form-action, and
+      'unsafe-inline' is required for the small inline scripts this site
+      ships), but they still stop the page from loading scripts, styles,
+      frames or connections from any host that isn't explicitly listed below
+      — meaningful defense-in-depth against any markup that slips through.
+    -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content="Umut Sevinç (VulnSVNC)" />
