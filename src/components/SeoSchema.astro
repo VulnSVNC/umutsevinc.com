@@ -6,28 +6,48 @@ interface Props { cves: any[] }
 const { cves } = Astro.props;
 const base = String(Astro.site).replace(/\/$/, '');
 
-const person = {
+// `image` on the Person, plus a separate WebSite node naming the same
+// person as its publisher, are what let Google resolve this domain to
+// "Umut Sevinç" with a face/logo in rich results and AI Overview source
+// chips, instead of falling back to the bare hostname with no icon.
+const graph = {
   '@context': 'https://schema.org',
-  '@type': 'Person',
-  '@id': `${base}/#person`,
-  name: SITE.fullName,
-  alternateName: SITE.alternateNames,
-  url: base + '/',
-  nationality: 'Turkey',
-  address: { '@type': 'PostalAddress', addressCountry: 'TR' },
-  jobTitle: SITE.jobTitle,
-  description: SITE.description,
-  knowsAbout: SITE.expertise,
-  sameAs: [SITE.github, SITE.linkedin],
-  subjectOf: cves.map((c) => ({
-    '@type': 'TechArticle',
-    headline: `${c.id}: ${c.title}`,
-    url: `${base}/cve/${slugOf(c.id)}`,
-    author: { '@id': `${base}/#person` },
-    about: c.product,
-    identifier: c.id,
-  })),
+  '@graph': [
+    {
+      '@type': 'Person',
+      '@id': `${base}/#person`,
+      name: SITE.fullName,
+      alternateName: SITE.alternateNames,
+      url: base + '/',
+      image: base + '/icon-512.png',
+      nationality: 'Turkey',
+      address: { '@type': 'PostalAddress', addressCountry: 'TR' },
+      jobTitle: SITE.jobTitle,
+      description: SITE.description,
+      knowsAbout: SITE.expertise,
+      sameAs: [SITE.github, SITE.linkedin],
+      subjectOf: cves.map((c) => ({
+        '@type': 'TechArticle',
+        headline: `${c.id}: ${c.title}`,
+        url: `${base}/cve/${slugOf(c.id)}`,
+        author: { '@id': `${base}/#person` },
+        about: c.product,
+        identifier: c.id,
+      })),
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${base}/#website`,
+      name: SITE.fullName,
+      alternateName: SITE.alternateNames,
+      url: base + '/',
+      image: base + '/icon-512.png',
+      inLanguage: ['tr', 'en'],
+      author: { '@id': `${base}/#person` },
+      publisher: { '@id': `${base}/#person` },
+    },
+  ],
 };
-const json = JSON.stringify(person).replace(/</g, '\\u003c');
+const json = JSON.stringify(graph).replace(/</g, '\\u003c');
 ---
 <script type="application/ld+json" set:html={json} />
