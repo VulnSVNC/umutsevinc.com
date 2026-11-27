@@ -43,6 +43,21 @@ const maxScore = scores.length ? Math.max(...scores) : null;
       </ul>
     </section>
 
+    <section class="mt-10 pt-8 border-t border-line" aria-labelledby="teaching">
+      <h2 id="teaching" class="font-serif text-xl text-ink">Teaching</h2>
+      <ul class="mt-3 space-y-4">
+        {SITE.teaching.map((t) => (
+          <li>
+            <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5">
+              <p class="text-ink">{t.name} <span class="text-faint font-normal">— {t.org}</span></p>
+              <span class="text-xs text-faint shrink-0">{t.date.en}</span>
+            </div>
+            <p class="mt-1 text-sm text-muted leading-relaxed">{t.description.en}</p>
+          </li>
+        ))}
+      </ul>
+    </section>
+
     <section class="mt-10 pt-8 border-t border-line" aria-labelledby="meta">
       <h2 id="meta" class="font-serif text-xl text-ink">Research approach: security of offensive tooling</h2>
       <p class="mt-3 leading-relaxed">
